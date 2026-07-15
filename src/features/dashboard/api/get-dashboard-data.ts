@@ -156,12 +156,28 @@ export async function getDashboardData(): Promise<DashboardData> {
         .limit(8),
     ]);
 
-    // Missing relation / RLS errors surface as empty Command Center.
-    if (
-      profileRes.error?.code === "42P01" ||
-      meetingsRes.error?.code === "42P01" ||
-      weddingsTodayRes.error?.message?.includes("does not exist")
-    ) {
+    // Missing relation errors (Postgres 42P01 or PostgREST PGRST205)
+    // keep the Command Center usable with empty states.
+    const relationMissing = [
+      profileRes.error,
+      meetingsRes.error,
+      weddingsTodayRes.error,
+      followUpsRes.error,
+      tasksTodayCountRes.error,
+      revenueRes.error,
+      outstandingRes.error,
+      upcomingWeddingsRes.error,
+      todaysTasksRes.error,
+    ].some(
+      (error) =>
+        error?.code === "42P01" ||
+        error?.code === "PGRST205" ||
+        error?.code === "42703" ||
+        error?.message?.toLowerCase().includes("does not exist") ||
+        error?.message?.toLowerCase().includes("could not find the table"),
+    );
+
+    if (relationMissing) {
       return emptyDashboard(fallbackName);
     }
 

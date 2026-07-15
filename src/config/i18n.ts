@@ -135,6 +135,18 @@ export const copy = {
     zh: "登录以进入 Aura OS 指挥中心",
     en: "Sign in to open the Aura OS Command Center",
   },
+  signUp: { zh: "注册", en: "Sign Up" },
+  signUpSubtitle: {
+    zh: "创建账户以使用 Aura OS",
+    en: "Create an account to use Aura OS",
+  },
+  fullName: { zh: "姓名", en: "Full Name" },
+  haveAccount: { zh: "已有账户？登录", en: "Already have an account? Sign in" },
+  needAccount: { zh: "没有账户？注册", en: "Need an account? Sign up" },
+  confirmEmail: {
+    zh: "请查收邮箱以确认账户，再登录。",
+    en: "Check your email to confirm your account, then sign in.",
+  },
   email: { zh: "邮箱", en: "Email" },
   password: { zh: "密码", en: "Password" },
   signOut: { zh: "退出登录", en: "Sign Out" },

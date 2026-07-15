@@ -3,68 +3,77 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import type { Database } from "@/types/database";
 
+function getSupabaseEnv() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  return { supabaseUrl, supabaseAnonKey };
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const { supabaseUrl, supabaseAnonKey } = getSupabaseEnv();
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return supabaseResponse;
   }
 
-  const supabase = createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => {
-          request.cookies.set(name, value);
-        });
-        supabaseResponse = NextResponse.next({
-          request,
-        });
-        cookiesToSet.forEach(({ name, value, options }) => {
-          supabaseResponse.cookies.set(name, value, options);
-        });
-      },
-    },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const pathname = request.nextUrl.pathname;
-  const isAuthRoute =
-    pathname.startsWith("/login") || pathname.startsWith("/auth");
-  const isProtected =
-    pathname.startsWith("/dashboard") || pathname === "/";
+  const isLogin = pathname === "/login";
+  const isAuthCallback = pathname.startsWith("/auth");
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isRoot = pathname === "/";
 
-  if (!user && pathname.startsWith("/dashboard")) {
+  let user: { id: string } | null = null;
+
+  try {
+    const supabase = createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options);
+          });
+        },
+      },
+    });
+
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Never crash the app if Supabase auth is temporarily unreachable.
+    // Unauthenticated routing rules still apply below when user is null.
+    user = null;
+  }
+
+  if (!user && isDashboard) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
-  if (user && (pathname === "/login" || pathname === "/")) {
+  if (user && (isLogin || isRoot)) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
-  if (!user && pathname === "/" && !isAuthRoute) {
+  if (!user && isRoot && !isAuthCallback) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
-
-  // silence unused for future route branching clarity
-  void isProtected;
 
   return supabaseResponse;
 }
