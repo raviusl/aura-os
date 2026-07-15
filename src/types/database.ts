@@ -1,0 +1,262 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+export type ClientStatus = "active" | "follow_up" | "archived";
+export type WeddingStatus =
+  | "inquiry"
+  | "confirmed"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
+export type TaskStatus = "todo" | "in_progress" | "done" | "cancelled";
+export type FinancialRecordType = "revenue" | "expense" | "payment";
+export type FinancialRecordStatus =
+  | "pending"
+  | "paid"
+  | "outstanding"
+  | "cancelled";
+
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: {
+          id: string;
+          full_name: string | null;
+          display_name: string | null;
+          avatar_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          full_name?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          full_name?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      clients: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          status: ClientStatus;
+          follow_up_at: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          status?: ClientStatus;
+          follow_up_at?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          status?: ClientStatus;
+          follow_up_at?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      weddings: {
+        Row: {
+          id: string;
+          user_id: string;
+          client_id: string | null;
+          name: string;
+          wedding_date: string;
+          venue: string | null;
+          status: WeddingStatus;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          client_id?: string | null;
+          name: string;
+          wedding_date: string;
+          venue?: string | null;
+          status?: WeddingStatus;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          client_id?: string | null;
+          name?: string;
+          wedding_date?: string;
+          venue?: string | null;
+          status?: WeddingStatus;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      meetings: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          starts_at: string;
+          ends_at: string | null;
+          client_id: string | null;
+          wedding_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          starts_at: string;
+          ends_at?: string | null;
+          client_id?: string | null;
+          wedding_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          title?: string;
+          starts_at?: string;
+          ends_at?: string | null;
+          client_id?: string | null;
+          wedding_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tasks: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          priority: TaskPriority;
+          due_at: string | null;
+          owner_id: string | null;
+          status: TaskStatus;
+          wedding_id: string | null;
+          client_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          priority?: TaskPriority;
+          due_at?: string | null;
+          owner_id?: string | null;
+          status?: TaskStatus;
+          wedding_id?: string | null;
+          client_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          title?: string;
+          priority?: TaskPriority;
+          due_at?: string | null;
+          owner_id?: string | null;
+          status?: TaskStatus;
+          wedding_id?: string | null;
+          client_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      financial_records: {
+        Row: {
+          id: string;
+          user_id: string;
+          record_type: FinancialRecordType;
+          amount: number;
+          currency: string;
+          status: FinancialRecordStatus;
+          occurred_on: string;
+          description: string | null;
+          wedding_id: string | null;
+          client_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          record_type: FinancialRecordType;
+          amount: number;
+          currency?: string;
+          status?: FinancialRecordStatus;
+          occurred_on?: string;
+          description?: string | null;
+          wedding_id?: string | null;
+          client_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          record_type?: FinancialRecordType;
+          amount?: number;
+          currency?: string;
+          status?: FinancialRecordStatus;
+          occurred_on?: string;
+          description?: string | null;
+          wedding_id?: string | null;
+          client_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+    };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
+  };
+};
+
+export type Tables<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Row"];
