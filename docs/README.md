@@ -17,9 +17,11 @@ Internal documentation for **Aura OS** — an AI operating system for service bu
 | [URL_STRUCTURE.md](./URL_STRUCTURE.md) | REST-friendly routes and Viewer URLs |
 | [DATABASE.md](./DATABASE.md) | Current PostgreSQL tables and relationships |
 | [UI_GUIDELINES.md](./UI_GUIDELINES.md) | Visual and interaction design principles |
+| [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) | Tokens, naming, and UI component inventory |
 | [SPRINT002.md](./SPRINT002.md) | Sprint 002 objectives and scope |
 | [SPRINT004.md](./SPRINT004.md) | Sprint 004 objectives and scope |
 | [SPRINT005.md](./SPRINT005.md) | Sprint 005 objectives and scope |
+| [SPRINT006.md](./SPRINT006.md) | Sprint 006 objectives and scope |
 
 ## Current status
 
@@ -27,7 +29,8 @@ Internal documentation for **Aura OS** — an AI operating system for service bu
 - **Sprint 002** established documentation and architecture foundations.
 - **Sprint 003** defines the target core data model (Workspace, Event templates, Files, Viewer roles).
 - **Sprint 004** defines complete user journeys for ten roles (Owner through Guest).
-- **Sprint 005** defines the product blueprint, navigation IA, page hierarchy, and URL structure — documentation only; no database, migration, or UI changes.
+- **Sprint 005** defines the product blueprint, navigation IA, page hierarchy, and URL structure.
+- **Sprint 006** initializes the design system foundation (UI primitives + tokens) — no business pages or schema changes.
 
 ## Related project docs
 
