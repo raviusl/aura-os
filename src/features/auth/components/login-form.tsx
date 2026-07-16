@@ -12,10 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { copy } from "@/config/i18n";
 import {
+  forgotPasswordSchema,
   signInSchema,
-  signUpSchema,
+  type ForgotPasswordInput,
   type SignInInput,
-  type SignUpInput,
 } from "@/features/auth/schemas/auth";
 import { createClient } from "@/lib/supabase/client";
 
@@ -25,7 +25,7 @@ function safeNextPath(raw: string | null): string {
   return raw;
 }
 
-type Mode = "signin" | "signup";
+type Mode = "signin" | "forgot";
 
 function AuthFormInner() {
   const searchParams = useSearchParams();
@@ -38,27 +38,31 @@ function AuthFormInner() {
     defaultValues: { email: "", password: "" },
   });
 
-  const signUpForm = useForm<SignUpInput>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: { email: "", password: "", fullName: "" },
+  const forgotForm = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: "" },
   });
 
   function switchMode(next: Mode) {
     setMode(next);
     signInForm.clearErrors();
-    signUpForm.clearErrors();
+    forgotForm.clearErrors();
   }
 
   return (
     <div className="w-full max-w-sm space-y-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
       <div className="space-y-1">
         <Bilingual
-          text={mode === "signin" ? copy.signIn : copy.signUp}
+          text={mode === "signin" ? copy.signIn : copy.forgotPassword}
           zhClassName="text-lg text-white"
           enClassName="text-white/40"
         />
         <Bilingual
-          text={mode === "signin" ? copy.signInSubtitle : copy.signUpSubtitle}
+          text={
+            mode === "signin"
+              ? copy.signInSubtitle
+              : copy.forgotPasswordSubtitle
+          }
           compact
           zhClassName="font-normal text-white/55"
           enClassName="text-white/30"
@@ -123,79 +127,46 @@ function AuthFormInner() {
       ) : (
         <form
           className="space-y-4"
-          onSubmit={signUpForm.handleSubmit((values) => {
+          onSubmit={forgotForm.handleSubmit((values) => {
             startTransition(async () => {
               try {
                 const supabase = createClient();
-                const { data, error } = await supabase.auth.signUp({
-                  email: values.email,
-                  password: values.password,
-                  options: {
-                    data: {
-                      full_name: values.fullName,
-                      display_name: values.fullName,
-                    },
+                const origin = window.location.origin;
+                const { error } = await supabase.auth.resetPasswordForEmail(
+                  values.email,
+                  {
+                    redirectTo: `${origin}/auth/callback?next=/auth/update-password`,
                   },
-                });
+                );
                 if (error) {
                   toast.error(error.message);
                   return;
                 }
-
-                if (data.session) {
-                  window.location.assign(nextPath);
-                  return;
-                }
-
                 toast.success(
-                  `${copy.confirmEmail.zh} / ${copy.confirmEmail.en}`,
+                  `${copy.resetEmailSent.zh} / ${copy.resetEmailSent.en}`,
                 );
                 switchMode("signin");
                 signInForm.setValue("email", values.email);
               } catch (error) {
                 const message =
-                  error instanceof Error ? error.message : "Sign up failed";
+                  error instanceof Error
+                    ? error.message
+                    : "Could not send reset email";
                 toast.error(message);
               }
             });
           })}
         >
           <div className="space-y-2">
-            <Label htmlFor="signup-fullname">
-              {copy.fullName.zh} / {copy.fullName.en}
-            </Label>
-            <Input
-              id="signup-fullname"
-              type="text"
-              autoComplete="name"
-              className="border-white/10 bg-white/5 text-white"
-              {...signUpForm.register("fullName")}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="signup-email">
+            <Label htmlFor="forgot-email">
               {copy.email.zh} / {copy.email.en}
             </Label>
             <Input
-              id="signup-email"
+              id="forgot-email"
               type="email"
               autoComplete="email"
               className="border-white/10 bg-white/5 text-white"
-              {...signUpForm.register("email")}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="signup-password">
-              {copy.password.zh} / {copy.password.en}
-            </Label>
-            <Input
-              id="signup-password"
-              type="password"
-              autoComplete="new-password"
-              className="border-white/10 bg-white/5 text-white"
-              {...signUpForm.register("password")}
+              {...forgotForm.register("email")}
             />
           </div>
 
@@ -204,7 +175,7 @@ function AuthFormInner() {
             disabled={pending}
             className="w-full bg-white text-black hover:bg-white/90"
           >
-            {copy.signUp.zh} / {copy.signUp.en}
+            {copy.sendResetLink.zh} / {copy.sendResetLink.en}
           </Button>
         </form>
       )}
@@ -212,11 +183,11 @@ function AuthFormInner() {
       <button
         type="button"
         className="w-full text-left text-xs text-white/45 transition-colors hover:text-white/75"
-        onClick={() => switchMode(mode === "signin" ? "signup" : "signin")}
+        onClick={() => switchMode(mode === "signin" ? "forgot" : "signin")}
       >
         {mode === "signin"
-          ? `${copy.needAccount.zh} / ${copy.needAccount.en}`
-          : `${copy.haveAccount.zh} / ${copy.haveAccount.en}`}
+          ? `${copy.forgotPassword.zh} / ${copy.forgotPassword.en}`
+          : `${copy.backToSignIn.zh} / ${copy.backToSignIn.en}`}
       </button>
     </div>
   );

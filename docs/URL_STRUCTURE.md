@@ -33,9 +33,9 @@ flowchart LR
 
 | Path | Purpose |
 | --- | --- |
-| `/login` | Sign in |
-| `/signup` | Sign up (if enabled) |
-| `/auth/callback` | OAuth / magic-link exchange |
+| `/login` | Sign in (email + password) + Forgot Password |
+| `/auth/update-password` | Set password after invite or reset |
+| `/auth/callback` | Auth code exchange |
 | `/auth/error` | Auth error |
 | `/` | Redirect → `/dashboard` if authed, else `/login` |
 

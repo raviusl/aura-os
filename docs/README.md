@@ -8,6 +8,7 @@ Internal documentation for **Aura OS** — an AI operating system for service bu
 | --- | --- |
 | [ROADMAP.md](./ROADMAP.md) | Product phases and planned modules |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | System stack and high-level design |
+| [AUTH.md](./AUTH.md) | Invitation-only auth and Super Admin invite flow |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Target core data model (entities, files, roles) |
 | [USER_JOURNEY.md](./USER_JOURNEY.md) | Role-based journeys, workflows, and permissions |
 | [PRODUCT_BLUEPRINT.md](./PRODUCT_BLUEPRINT.md) | Event OS modules and product architecture |

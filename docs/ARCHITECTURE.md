@@ -64,12 +64,12 @@ Application code lives under `src/`:
 
 ## Authentication
 
-- **Supabase Auth**
-- Email-based sign-up / sign-in
+- **Supabase Auth** (invitation-only enterprise access)
+- **No public Sign Up** — login is email + password + Forgot Password only
+- New users: Super Admin invite → email → set password → login (see [AUTH.md](./AUTH.md))
 - Session refresh via Next.js middleware (`src/middleware.ts` → `src/lib/supabase/middleware.ts`)
 - Auth callback exchange at `src/app/auth/callback/route.ts`
-- `public.profiles` extends `auth.users` (auto-created on signup)
-
+- `public.profiles` extends `auth.users` (auto-created when an Auth user is created)
 ## Security model
 
 - RLS enabled on all public business tables
