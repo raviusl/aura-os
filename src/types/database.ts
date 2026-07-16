@@ -361,6 +361,18 @@ export type Database = {
         Args: { p_email: string };
         Returns: boolean;
       };
+      list_managed_users: {
+        Args: Record<string, never>;
+        Returns: {
+          id: string;
+          email: string;
+          full_name: string | null;
+          display_name: string | null;
+          company: string | null;
+          role: string | null;
+          created_at: string;
+        }[];
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

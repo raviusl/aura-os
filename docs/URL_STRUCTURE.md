@@ -40,7 +40,7 @@ flowchart LR
 | `/auth/error` | Auth error |
 | `/dashboard/settings` | Settings hub |
 | `/dashboard/settings/users` | User Management (Super Admin) |
-| `/dashboard/settings/users/invite` | Invite User (Super Admin) |
+| `/dashboard/settings/users/invite` | Opens Invite User dialog (Super Admin) |
 | `/` | Redirect → `/dashboard` if authed, else `/login` |
 
 ---

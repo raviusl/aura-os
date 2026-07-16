@@ -1,7 +1,9 @@
-import { InviteUserForm } from "@/features/auth/components/invite-user-form";
+import { redirect } from "next/navigation";
+
 import { requireSuperAdminPage } from "@/features/auth/lib/require-super-admin-page";
 
+/** Invite UI lives in the User Management dialog. */
 export default async function InviteUserPage() {
   await requireSuperAdminPage();
-  return <InviteUserForm />;
+  redirect("/dashboard/settings/users?invite=1");
 }

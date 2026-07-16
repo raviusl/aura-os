@@ -6,8 +6,9 @@ import {
   hashInvitationToken,
 } from "@/features/auth/lib/invitation-token";
 import { requireAppUrl } from "@/features/auth/lib/require-app-url";
-import { sendInvitationEmail } from "@/features/auth/lib/send-invitation-email";
+import { authUserExistsByEmail } from "@/features/auth/invite/auth-user-exists";
 import { writeInvitationAuditLog } from "@/features/auth/invite/audit";
+import { deliverInvitationEmail } from "@/features/auth/invite/deliver-invitation-email";
 import { InvitationError } from "@/features/auth/invite/errors";
 import {
   isInvitationExpired,
@@ -15,7 +16,6 @@ import {
 } from "@/features/auth/invite/expire-invitations";
 import {
   INVITATION_TTL_HOURS,
-  INVITE_ROLE_LABELS,
   inviteUserSchema,
   type InviteUserInput,
 } from "@/features/auth/schemas/invite";
@@ -63,7 +63,7 @@ export async function inviteUser(
   if (pendingInvite) {
     if (!isInvitationExpired(pendingInvite.expires_at)) {
       throw new InvitationError(
-        "A pending invitation already exists for this email. Revoke it before inviting again.",
+        "A pending invitation already exists for this email. Cancel it before inviting again.",
       );
     }
     await markInvitationsExpired({
@@ -96,7 +96,7 @@ export async function inviteUser(
   if (insertError || !invitation) {
     if (insertError?.code === "23505") {
       throw new InvitationError(
-        "A pending invitation already exists for this email. Revoke it before inviting again.",
+        "A pending invitation already exists for this email. Cancel it before inviting again.",
       );
     }
     console.error("invitation insert failed", insertError?.message);
@@ -115,73 +115,23 @@ export async function inviteUser(
     },
   });
 
-  const emailResult = await sendInvitationEmail({
+  const delivery = await deliverInvitationEmail({
+    invitationId: invitation.id,
+    actorId: actor.id,
     to: email,
     fullName: values.fullName.trim(),
     company: values.company.trim(),
-    roleLabel: INVITE_ROLE_LABELS[values.role].en,
+    role: values.role,
     inviteUrl,
     expiresAt,
   });
-
-  if (emailResult.ok) {
-    await admin
-      .from("invitations")
-      .update({ last_sent_at: new Date().toISOString() })
-      .eq("id", invitation.id);
-
-    await writeInvitationAuditLog({
-      invitationId: invitation.id,
-      action: "emailed",
-      actorId: actor.id,
-      metadata: {
-        provider: emailResult.provider,
-        ...(emailResult.provider === "resend"
-          ? { message_id: emailResult.id }
-          : { warning: emailResult.warning }),
-      },
-    });
-  } else {
-    await writeInvitationAuditLog({
-      invitationId: invitation.id,
-      action: "email_failed",
-      actorId: actor.id,
-      metadata: {
-        provider: emailResult.provider,
-        error: emailResult.error,
-      },
-    });
-  }
-
-  const emailSent = emailResult.ok && emailResult.provider === "resend";
 
   return {
     invitationId: invitation.id,
     email,
     expiresAt: expiresAt.toISOString(),
-    emailSent,
-    inviteUrl: emailSent ? undefined : inviteUrl,
-    emailWarning:
-      emailResult.ok && emailResult.provider === "dev_fallback"
-        ? emailResult.warning
-        : !emailResult.ok
-          ? emailResult.error
-          : undefined,
+    emailSent: delivery.emailSent,
+    inviteUrl: delivery.inviteUrl,
+    emailWarning: delivery.emailWarning,
   };
-}
-
-async function authUserExistsByEmail(
-  admin: ReturnType<typeof createAdminClient>,
-  email: string,
-) {
-  const { data, error } = await admin.rpc("auth_user_exists_by_email", {
-    p_email: email,
-  });
-
-  if (error) {
-    console.error("auth_user_exists_by_email failed", error.message);
-    throw new InvitationError("Failed to verify email availability.");
-  }
-
-  return Boolean(data);
 }

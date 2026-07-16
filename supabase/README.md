@@ -17,6 +17,7 @@ Aura OS does **not** allow public Sign Up.
 
 - `supabase/migrations/20260716000300_sprint007_invitations.sql`
 - `supabase/migrations/20260716000400_sprint007_invitation_hardening.sql`
+- `supabase/migrations/20260717000100_sprint007_list_managed_users.sql`
 
 Bootstrap Super Admins via `SUPER_ADMIN_EMAILS` in `.env.local`.  
 Set `NEXT_PUBLIC_APP_URL` to the public origin used in invite emails.  

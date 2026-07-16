@@ -35,6 +35,7 @@ Apply migrations (in order):
 
 1. `supabase/migrations/20260716000300_sprint007_invitations.sql`
 2. `supabase/migrations/20260716000400_sprint007_invitation_hardening.sql`
+3. `supabase/migrations/20260717000100_sprint007_list_managed_users.sql`
 
 Set `NEXT_PUBLIC_APP_URL` to the public production origin (required for invite links in production).
 
@@ -89,8 +90,8 @@ sequenceDiagram
 
 | Path | Purpose |
 | --- | --- |
-| `/dashboard/settings/users` | Invitation list |
-| `/dashboard/settings/users/invite` | Invite form |
+| `/dashboard/settings/users` | User Management (users + invitations) |
+| `/dashboard/settings/users/invite` | Redirects to User Management invite dialog |
 | `/invite/accept` | Accept + set password |
 | `src/features/auth/invite/*` | Server domain logic |
 

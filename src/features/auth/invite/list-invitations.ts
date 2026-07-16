@@ -66,7 +66,7 @@ export async function revokeInvitation(invitationId: string) {
     throw new InvitationError("Failed to revoke invitation.");
   }
   if (!data) {
-    throw new InvitationError("Only pending invitations can be revoked.");
+    throw new InvitationError("Only pending invitations can be cancelled.");
   }
 
   await writeInvitationAuditLog({

@@ -27,8 +27,8 @@ export default async function SettingsPage() {
           >
             <p className="text-sm font-medium text-white">User Management</p>
             <p className="mt-1 text-xs text-white/45">
-              Invite teammates, track invitation status, and revoke pending
-              invites. Super Admin only.
+              Manage users, send invitations, resend expired invites, and cancel
+              pending ones. Super Admin only.
             </p>
           </Link>
         ) : (
