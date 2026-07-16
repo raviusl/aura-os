@@ -1,22 +1,27 @@
 import { z } from "zod";
 
+const emailSchema = z.string().email("Enter a valid email address");
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters");
+
 export const signInSchema = z.object({
-  email: z.string().email("Enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: emailSchema,
+  password: passwordSchema,
 });
 
 export type SignInInput = z.infer<typeof signInSchema>;
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email("Enter a valid email address"),
+  email: emailSchema,
 });
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
 export const updatePasswordSchema = z
   .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(8, "Confirm your password"),
+    password: passwordSchema,
+    confirmPassword: passwordSchema,
   })
   .refine((values) => values.password === values.confirmPassword, {
     message: "Passwords do not match",
@@ -27,7 +32,7 @@ export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;
 
 /** Future Super Admin invite — not exposed via public UI. */
 export const inviteUserSchema = z.object({
-  email: z.string().email("Enter a valid email address"),
+  email: emailSchema,
   fullName: z.string().min(1).optional(),
 });
 

@@ -16,10 +16,13 @@ export function Bilingual({
   enClassName,
   compact = false,
 }: BilingualProps) {
+  const zh = text?.zh ?? "";
+  const en = text?.en ?? "";
+
   return (
     <span className={cn("flex flex-col", className)}>
       <span className={cn(compact ? "text-sm font-medium" : "font-medium", zhClassName)}>
-        {text.zh}
+        {zh}
       </span>
       <span
         className={cn(
@@ -28,7 +31,7 @@ export function Bilingual({
           enClassName,
         )}
       >
-        {text.en}
+        {en}
       </span>
     </span>
   );

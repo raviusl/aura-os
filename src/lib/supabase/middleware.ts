@@ -22,7 +22,9 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isLogin = pathname === "/login";
-  const isAuthCallback = pathname.startsWith("/auth");
+  const isAuthCallback = pathname === "/auth/callback";
+  const isAuthError = pathname === "/auth/error";
+  const isUpdatePassword = pathname === "/auth/update-password";
   const isDashboard = pathname.startsWith("/dashboard");
   const isRoot = pathname === "/";
 
@@ -56,10 +58,12 @@ export async function updateSession(request: NextRequest) {
     user = null;
   }
 
-  if (!user && isDashboard) {
+  if (!user && (isDashboard || isUpdatePassword)) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", pathname);
+    if (isDashboard) {
+      url.searchParams.set("next", pathname);
+    }
     return NextResponse.redirect(url);
   }
 
@@ -69,7 +73,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (!user && isRoot && !isAuthCallback) {
+  if (!user && isRoot && !isAuthCallback && !isAuthError) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

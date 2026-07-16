@@ -74,7 +74,8 @@ sequenceDiagram
 | --- | --- |
 | `src/features/auth/invite/invite-user.ts` | Server-only invite via service role |
 | `src/features/auth/lib/assert-super-admin.ts` | Gate for Super Admin actions |
-| `src/features/auth/types.ts` | `isSuperAdmin` / `PlatformRole` |
+| `src/features/auth/lib/platform-role.ts` | `isSuperAdmin` / allowlist (server-only) |
+| `src/features/auth/types.ts` | `PlatformRole`, invite result types |
 | `src/features/auth/schemas/auth.ts` | `inviteUserSchema` |
 
 Do **not** reintroduce public registration. Future Team / Settings UI should call `inviteUser`, not `signUp`.

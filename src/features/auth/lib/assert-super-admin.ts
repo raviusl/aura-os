@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { isSuperAdmin } from "@/features/auth/types";
+import { isSuperAdmin } from "@/features/auth/lib/platform-role";
 
 /**
  * Ensures the current session belongs to a Super Admin.

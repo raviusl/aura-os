@@ -10,26 +10,26 @@ import { Bilingual } from "@/components/ui/bilingual";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { copy } from "@/config/i18n";
+import { authCopy } from "@/features/auth/copy";
 import {
   forgotPasswordSchema,
   signInSchema,
   type ForgotPasswordInput,
   type SignInInput,
 } from "@/features/auth/schemas/auth";
+import {
+  authCardClassName,
+  authFieldClassName,
+  authPrimaryButtonClassName,
+  safeAuthNextPath,
+} from "@/features/auth/lib/auth-ui";
 import { createClient } from "@/lib/supabase/client";
-
-function safeNextPath(raw: string | null): string {
-  if (!raw) return "/dashboard";
-  if (!raw.startsWith("/") || raw.startsWith("//")) return "/dashboard";
-  return raw;
-}
 
 type Mode = "signin" | "forgot";
 
 function AuthFormInner() {
   const searchParams = useSearchParams();
-  const nextPath = safeNextPath(searchParams.get("next"));
+  const nextPath = safeAuthNextPath(searchParams.get("next"));
   const [mode, setMode] = useState<Mode>("signin");
   const [pending, startTransition] = useTransition();
 
@@ -47,22 +47,27 @@ function AuthFormInner() {
     setMode(next);
     signInForm.clearErrors();
     forgotForm.clearErrors();
+    if (next === "forgot") {
+      forgotForm.setValue("email", signInForm.getValues("email"));
+    }
   }
 
+  const title = mode === "signin" ? authCopy.signIn : authCopy.forgotPassword;
+  const subtitle =
+    mode === "signin"
+      ? authCopy.signInSubtitle
+      : authCopy.forgotPasswordSubtitle;
+
   return (
-    <div className="w-full max-w-sm space-y-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+    <div className={authCardClassName}>
       <div className="space-y-1">
         <Bilingual
-          text={mode === "signin" ? copy.signIn : copy.forgotPassword}
+          text={title}
           zhClassName="text-lg text-white"
           enClassName="text-white/40"
         />
         <Bilingual
-          text={
-            mode === "signin"
-              ? copy.signInSubtitle
-              : copy.forgotPasswordSubtitle
-          }
+          text={subtitle}
           compact
           zhClassName="font-normal text-white/55"
           enClassName="text-white/30"
@@ -92,26 +97,26 @@ function AuthFormInner() {
         >
           <div className="space-y-2">
             <Label htmlFor="signin-email">
-              {copy.email.zh} / {copy.email.en}
+              {authCopy.email.zh} / {authCopy.email.en}
             </Label>
             <Input
               id="signin-email"
               type="email"
               autoComplete="email"
-              className="border-white/10 bg-white/5 text-white"
+              className={authFieldClassName}
               {...signInForm.register("email")}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="signin-password">
-              {copy.password.zh} / {copy.password.en}
+              {authCopy.password.zh} / {authCopy.password.en}
             </Label>
             <Input
               id="signin-password"
               type="password"
               autoComplete="current-password"
-              className="border-white/10 bg-white/5 text-white"
+              className={authFieldClassName}
               {...signInForm.register("password")}
             />
           </div>
@@ -119,9 +124,9 @@ function AuthFormInner() {
           <Button
             type="submit"
             disabled={pending}
-            className="w-full bg-white text-black hover:bg-white/90"
+            className={authPrimaryButtonClassName}
           >
-            {copy.signIn.zh} / {copy.signIn.en}
+            {authCopy.signIn.zh} / {authCopy.signIn.en}
           </Button>
         </form>
       ) : (
@@ -143,7 +148,7 @@ function AuthFormInner() {
                   return;
                 }
                 toast.success(
-                  `${copy.resetEmailSent.zh} / ${copy.resetEmailSent.en}`,
+                  `${authCopy.resetEmailSent.zh} / ${authCopy.resetEmailSent.en}`,
                 );
                 switchMode("signin");
                 signInForm.setValue("email", values.email);
@@ -159,13 +164,13 @@ function AuthFormInner() {
         >
           <div className="space-y-2">
             <Label htmlFor="forgot-email">
-              {copy.email.zh} / {copy.email.en}
+              {authCopy.email.zh} / {authCopy.email.en}
             </Label>
             <Input
               id="forgot-email"
               type="email"
               autoComplete="email"
-              className="border-white/10 bg-white/5 text-white"
+              className={authFieldClassName}
               {...forgotForm.register("email")}
             />
           </div>
@@ -173,9 +178,9 @@ function AuthFormInner() {
           <Button
             type="submit"
             disabled={pending}
-            className="w-full bg-white text-black hover:bg-white/90"
+            className={authPrimaryButtonClassName}
           >
-            {copy.sendResetLink.zh} / {copy.sendResetLink.en}
+            {authCopy.sendResetLink.zh} / {authCopy.sendResetLink.en}
           </Button>
         </form>
       )}
@@ -186,8 +191,8 @@ function AuthFormInner() {
         onClick={() => switchMode(mode === "signin" ? "forgot" : "signin")}
       >
         {mode === "signin"
-          ? `${copy.forgotPassword.zh} / ${copy.forgotPassword.en}`
-          : `${copy.backToSignIn.zh} / ${copy.backToSignIn.en}`}
+          ? `${authCopy.forgotPassword.zh} / ${authCopy.forgotPassword.en}`
+          : `${authCopy.backToSignIn.zh} / ${authCopy.backToSignIn.en}`}
       </button>
     </div>
   );
