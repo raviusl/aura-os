@@ -8,8 +8,3 @@ export type AuthUser = {
  * Super Admin is the only principal allowed to invite users.
  */
 export type PlatformRole = "super_admin" | "member";
-
-export type InviteUserResult = {
-  userId: string;
-  email: string;
-};

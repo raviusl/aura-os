@@ -10,11 +10,17 @@ Aura OS does **not** allow public Sign Up.
 4. Add redirect URLs:
    - `http://localhost:3000/auth/callback`
    - `http://localhost:3000/auth/callback?next=/auth/update-password`
+   - `http://localhost:3000/invite/accept`
    - (and the same paths for production `NEXT_PUBLIC_APP_URL`)
 
-Bootstrap Super Admins via `SUPER_ADMIN_EMAILS` in `.env.local` (see `.env.example` and [docs/AUTH.md](../docs/AUTH.md)).
+5. Run Sprint 007 migration in SQL Editor:
 
-New users are created only by Super Admin invite (`inviteUser` server module) — UI for Invite User comes later.
+`supabase/migrations/20260716000300_sprint007_invitations.sql`
+
+Bootstrap Super Admins via `SUPER_ADMIN_EMAILS` in `.env.local`.  
+Configure `RESEND_API_KEY` to send invitation emails (optional for local; invite URL is shown if unset).
+
+See [docs/AUTH.md](../docs/AUTH.md).
 
 ## Sprint 001 — apply schema repair (required)
 

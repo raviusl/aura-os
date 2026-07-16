@@ -22,6 +22,26 @@ export type FinancialRecordStatus =
   | "outstanding"
   | "cancelled";
 
+export type InviteRole =
+  | "admin"
+  | "coordinator"
+  | "event_planner"
+  | "finance"
+  | "sales"
+  | "designer"
+  | "staff";
+
+export type InvitationStatus = "pending" | "accepted" | "expired" | "revoked";
+
+export type InvitationAuditAction =
+  | "created"
+  | "emailed"
+  | "email_failed"
+  | "accepted"
+  | "expired"
+  | "revoked"
+  | "resent";
+
 export type Database = {
   public: {
     Tables: {
@@ -31,6 +51,8 @@ export type Database = {
           full_name: string | null;
           display_name: string | null;
           avatar_url: string | null;
+          company: string | null;
+          role: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -39,6 +61,8 @@ export type Database = {
           full_name?: string | null;
           display_name?: string | null;
           avatar_url?: string | null;
+          company?: string | null;
+          role?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -47,6 +71,8 @@ export type Database = {
           full_name?: string | null;
           display_name?: string | null;
           avatar_url?: string | null;
+          company?: string | null;
+          role?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -247,6 +273,84 @@ export type Database = {
           client_id?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      invitations: {
+        Row: {
+          id: string;
+          email: string;
+          full_name: string;
+          company: string;
+          role: InviteRole;
+          token_hash: string;
+          status: InvitationStatus;
+          invited_by: string;
+          expires_at: string;
+          accepted_at: string | null;
+          accepted_user_id: string | null;
+          last_sent_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          full_name: string;
+          company: string;
+          role: InviteRole;
+          token_hash: string;
+          status?: InvitationStatus;
+          invited_by: string;
+          expires_at: string;
+          accepted_at?: string | null;
+          accepted_user_id?: string | null;
+          last_sent_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          full_name?: string;
+          company?: string;
+          role?: InviteRole;
+          token_hash?: string;
+          status?: InvitationStatus;
+          invited_by?: string;
+          expires_at?: string;
+          accepted_at?: string | null;
+          accepted_user_id?: string | null;
+          last_sent_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      invitation_audit_logs: {
+        Row: {
+          id: string;
+          invitation_id: string | null;
+          action: InvitationAuditAction;
+          actor_id: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          invitation_id?: string | null;
+          action: InvitationAuditAction;
+          actor_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          invitation_id?: string | null;
+          action?: InvitationAuditAction;
+          actor_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
         };
         Relationships: [];
       };

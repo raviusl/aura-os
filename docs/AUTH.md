@@ -13,7 +13,7 @@ Aura OS is an **enterprise / invitation-only** product. There is **no public Sig
 
 Password recovery lands on `/auth/update-password` after the email link is exchanged via `/auth/callback`.
 
-## Disabled
+## Disabled permanently
 
 - Public registration UI  
 - Client-side `supabase.auth.signUp`  
@@ -23,68 +23,79 @@ Password recovery lands on `/auth/update-password` after the email link is excha
 
 In **Supabase Dashboard → Authentication → Providers → Email**:
 
-- **Disable** “Enable sign ups” (or equivalent public signup toggle)
-
-This blocks public registration at the Auth API even if a rogue client calls `signUp`.
+- **Disable** “Enable sign ups”
 
 Also add redirect URLs for:
 
 - `{APP_URL}/auth/callback`
 - `{APP_URL}/auth/callback?next=/auth/update-password`
+- `{APP_URL}/invite/accept`
+
+Apply migration:
+
+`supabase/migrations/20260716000300_sprint007_invitations.sql`
 
 ## Super Admin
-
-Platform privilege (not Workspace Team roles).
 
 A user is Super Admin if either:
 
 1. `user.app_metadata.role === "super_admin"`, or  
-2. Their email is listed in `SUPER_ADMIN_EMAILS` (comma-separated)
+2. Their email is listed in `SUPER_ADMIN_EMAILS`
 
-Only Super Admins may create users (via invite).
+Only Super Admins can open **Settings → User Management** and send invites.
 
-## Future invite flow
+## Invitation flow
 
 ```text
 Super Admin
-  → Invite User (server: inviteUser)
-  → Email Invitation (Supabase Auth)
-  → User Creates Password (/auth/update-password)
-  → Login (/login)
+  → Settings → User Management → Invite User
+  → Secure token generated (hashed at rest)
+  → Email sent (Resend) or invite URL shown for manual share
+  → User opens /invite/accept?token=…
+  → Creates password (single use, 72h max)
+  → Account created → Login / dashboard
 ```
 
 ```mermaid
 sequenceDiagram
   participant SA as Super Admin
-  participant App as Aura OS Server
-  participant Auth as Supabase Auth
-  participant User as Invited User
+  participant App as Aura OS
+  participant Mail as Resend
+  participant User as Invitee
 
-  SA->>App: inviteUser(email)
-  App->>App: assertSuperAdmin()
-  App->>Auth: admin.inviteUserByEmail
-  Auth->>User: Invitation email
-  User->>Auth: Accept invite / set password
-  User->>App: Login with email + password
+  SA->>App: Invite User form
+  App->>App: assertSuperAdmin + create invitation
+  App->>Mail: Send invite email
+  Mail->>User: Accept link
+  User->>App: /invite/accept + password
+  App->>App: Validate token, mark accepted, create Auth user
+  User->>App: Signed in / login
 ```
 
-### Code scaffolding (no full UI yet)
+### Rules
+
+| Rule | Enforcement |
+| --- | --- |
+| 72h expiry | `expires_at` + status `expired` |
+| Single use | status must be `pending`; claim is conditional update |
+| Audit | `invitation_audit_logs` for created / emailed / accepted / revoked / expired |
+| No plaintext token | only `token_hash` (SHA-256) stored |
+
+### Key paths
 
 | Path | Purpose |
 | --- | --- |
-| `src/features/auth/invite/invite-user.ts` | Server-only invite via service role |
-| `src/features/auth/lib/assert-super-admin.ts` | Gate for Super Admin actions |
-| `src/features/auth/lib/platform-role.ts` | `isSuperAdmin` / allowlist (server-only) |
-| `src/features/auth/types.ts` | `PlatformRole`, invite result types |
-| `src/features/auth/schemas/auth.ts` | `inviteUserSchema` |
-
-Do **not** reintroduce public registration. Future Team / Settings UI should call `inviteUser`, not `signUp`.
+| `/dashboard/settings/users` | Invitation list |
+| `/dashboard/settings/users/invite` | Invite form |
+| `/invite/accept` | Accept + set password |
+| `src/features/auth/invite/*` | Server domain logic |
 
 ## Environment
 
 ```bash
-# Comma-separated Super Admin emails (bootstrap allowlist)
 SUPER_ADMIN_EMAILS=owner@yourcompany.com
+RESEND_API_KEY=re_xxx
+RESEND_FROM_EMAIL=Aura OS <onboarding@resend.dev>
 ```
 
-See `.env.example`.
+Without `RESEND_API_KEY`, invitations are still created and the Super Admin is shown the invite URL to copy.

@@ -34,9 +34,13 @@ flowchart LR
 | Path | Purpose |
 | --- | --- |
 | `/login` | Sign in (email + password) + Forgot Password |
+| `/invite/accept` | Accept invitation + set password |
 | `/auth/update-password` | Set password after invite or reset |
 | `/auth/callback` | Auth code exchange |
 | `/auth/error` | Auth error |
+| `/dashboard/settings` | Settings hub |
+| `/dashboard/settings/users` | User Management (Super Admin) |
+| `/dashboard/settings/users/invite` | Invite User (Super Admin) |
 | `/` | Redirect → `/dashboard` if authed, else `/login` |
 
 ---

@@ -25,6 +25,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthCallback = pathname === "/auth/callback";
   const isAuthError = pathname === "/auth/error";
   const isUpdatePassword = pathname === "/auth/update-password";
+  const isInviteAccept = pathname === "/invite/accept";
   const isDashboard = pathname.startsWith("/dashboard");
   const isRoot = pathname === "/";
 
@@ -73,7 +74,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (!user && isRoot && !isAuthCallback && !isAuthError) {
+  if (!user && isRoot && !isAuthCallback && !isAuthError && !isInviteAccept) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

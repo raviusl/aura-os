@@ -23,6 +23,7 @@ Internal documentation for **Aura OS** — an AI operating system for service bu
 | [SPRINT004.md](./SPRINT004.md) | Sprint 004 objectives and scope |
 | [SPRINT005.md](./SPRINT005.md) | Sprint 005 objectives and scope |
 | [SPRINT006.md](./SPRINT006.md) | Sprint 006 objectives and scope |
+| [SPRINT007.md](./SPRINT007.md) | Sprint 007 objectives and scope |
 
 ## Current status
 
@@ -31,7 +32,8 @@ Internal documentation for **Aura OS** — an AI operating system for service bu
 - **Sprint 003** defines the target core data model (Workspace, Event templates, Files, Viewer roles).
 - **Sprint 004** defines complete user journeys for ten roles (Owner through Guest).
 - **Sprint 005** defines the product blueprint, navigation IA, page hierarchy, and URL structure.
-- **Sprint 006** initializes the design system foundation (UI primitives + tokens) — no business pages or schema changes.
+- **Sprint 006** initializes the design system foundation (UI primitives + tokens).
+- **Sprint 007** delivers Super Admin invitation management (tokenized invites, audit log, accept flow).
 
 ## Related project docs
 
