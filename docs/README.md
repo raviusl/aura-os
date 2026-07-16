@@ -37,8 +37,10 @@ Earlier Aura OS sprint docs remain for reference only. Where they conflict with 
 
 - **Product Bible** — approved under `/docs/product`
 - **Architecture Phase** — approved under `/docs/architecture`
-- **Prototype V0** — archived (no feature development, no rebuild yet)
-- **Next** — Sprint 008 (await kickoff)
+- **Sprint 008 Blueprint** — documentation approved under `/docs/sprint-008`
+- **Architecture Review** — pending (Blueprint not locked yet)
+- **Prototype V0** — archived (no feature development, no rebuild)
+- **Next** — wait for Architecture Review / Blueprint lock (do not start Sprint 009)
 
 ## Related project docs
 
