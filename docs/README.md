@@ -1,39 +1,44 @@
-# Aura OS Documentation
+# RIVA Documentation
 
-Internal documentation for **Aura OS** — an AI operating system for service businesses (wedding planning first).
+Internal documentation for **RIVA** — the operating system for service businesses.
 
-## Contents
+> **Prototype V0 is archived.** Do not extend the current app. Wait for **Sprint 008**.  
+> See [architecture/PROTOTYPE_V0_ARCHIVED.md](./architecture/PROTOTYPE_V0_ARCHIVED.md).
+
+## Canonical design (approved)
+
+| Folder | Purpose |
+| --- | --- |
+| [product/](./product/01_SOFTWARE_VISION.md) | **Product Bible** — vision, principles, IA, data, portals, automation, roadmap, rules |
+| [architecture/](./architecture/00_ARCHITECTURE_PHASE.md) | **Software Architecture** — navigation, hierarchy, permissions, modules, portals |
+
+## Historical / Prototype V0 docs
+
+Earlier Aura OS sprint docs remain for reference only. Where they conflict with `/docs/product` or `/docs/architecture`, the Product Bible and Architecture Phase win.
 
 | Document | Purpose |
 | --- | --- |
-| [ROADMAP.md](./ROADMAP.md) | Product phases and planned modules |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | System stack and high-level design |
-| [AUTH.md](./AUTH.md) | Invitation-only auth and Super Admin invite flow |
-| [DATA_MODEL.md](./DATA_MODEL.md) | Target core data model (entities, files, roles) |
-| [USER_JOURNEY.md](./USER_JOURNEY.md) | Role-based journeys, workflows, and permissions |
-| [PRODUCT_BLUEPRINT.md](./PRODUCT_BLUEPRINT.md) | Event OS modules and product architecture |
-| [NAVIGATION.md](./NAVIGATION.md) | Top nav, sidebar behavior, navigation rules |
-| [SIDEBAR_STRUCTURE.md](./SIDEBAR_STRUCTURE.md) | Nested left-sidebar information architecture |
-| [PAGE_HIERARCHY.md](./PAGE_HIERARCHY.md) | Parent–child page trees |
-| [URL_STRUCTURE.md](./URL_STRUCTURE.md) | REST-friendly routes and Viewer URLs |
-| [DATABASE.md](./DATABASE.md) | Current PostgreSQL tables and relationships |
-| [UI_GUIDELINES.md](./UI_GUIDELINES.md) | Visual and interaction design principles |
-| [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) | Tokens, naming, and UI component inventory |
-| [SPRINT002.md](./SPRINT002.md) | Sprint 002 objectives and scope |
-| [SPRINT004.md](./SPRINT004.md) | Sprint 004 objectives and scope |
-| [SPRINT005.md](./SPRINT005.md) | Sprint 005 objectives and scope |
-| [SPRINT006.md](./SPRINT006.md) | Sprint 006 objectives and scope |
-| [SPRINT007.md](./SPRINT007.md) | Sprint 007 objectives and scope |
+| [ROADMAP.md](./ROADMAP.md) | Legacy phases (superseded by product/08_ROADMAP.md) |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Legacy stack notes |
+| [AUTH.md](./AUTH.md) | Invitation-only auth (V0 implementation notes) |
+| [DATA_MODEL.md](./DATA_MODEL.md) | Legacy target data model |
+| [USER_JOURNEY.md](./USER_JOURNEY.md) | Legacy role journeys |
+| [PRODUCT_BLUEPRINT.md](./PRODUCT_BLUEPRINT.md) | Legacy product blueprint |
+| [NAVIGATION.md](./NAVIGATION.md) | Legacy nav (superseded by architecture/01) |
+| [SIDEBAR_STRUCTURE.md](./SIDEBAR_STRUCTURE.md) | Legacy sidebar IA |
+| [PAGE_HIERARCHY.md](./PAGE_HIERARCHY.md) | Legacy page trees |
+| [URL_STRUCTURE.md](./URL_STRUCTURE.md) | Legacy routes |
+| [DATABASE.md](./DATABASE.md) | V0 PostgreSQL tables |
+| [UI_GUIDELINES.md](./UI_GUIDELINES.md) | Visual principles |
+| [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) | V0 UI component inventory |
+| [SPRINT002.md](./SPRINT002.md) … [SPRINT007.md](./SPRINT007.md) | Historical sprint notes |
 
 ## Current status
 
-- **Sprint 001** delivered the Command Center foundation: auth, dashboard shell, and core schema (`profiles`, `clients`, `weddings`, `meetings`, `tasks`, `financial_records`).
-- **Sprint 002** established documentation and architecture foundations.
-- **Sprint 003** defines the target core data model (Workspace, Event templates, Files, Viewer roles).
-- **Sprint 004** defines complete user journeys for ten roles (Owner through Guest).
-- **Sprint 005** defines the product blueprint, navigation IA, page hierarchy, and URL structure.
-- **Sprint 006** initializes the design system foundation (UI primitives + tokens).
-- **Sprint 007** delivers Super Admin invitation management (tokenized invites, audit log, accept flow).
+- **Product Bible** — approved under `/docs/product`
+- **Architecture Phase** — approved under `/docs/architecture`
+- **Prototype V0** — archived (no feature development, no rebuild yet)
+- **Next** — Sprint 008 (await kickoff)
 
 ## Related project docs
 
