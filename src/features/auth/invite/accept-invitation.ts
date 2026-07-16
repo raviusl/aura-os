@@ -1,13 +1,19 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 import { writeInvitationAuditLog } from "@/features/auth/invite/audit";
+import { InvitationError } from "@/features/auth/invite/errors";
+import {
+  isInvitationExpired,
+  markInvitationsExpired,
+} from "@/features/auth/invite/expire-invitations";
 import { hashInvitationToken } from "@/features/auth/lib/invitation-token";
 import {
   acceptInvitationSchema,
   type AcceptInvitationInput,
 } from "@/features/auth/schemas/invite";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+import type { Tables } from "@/types/database";
 
 export type AcceptInvitationPreview = {
   email: string;
@@ -16,6 +22,8 @@ export type AcceptInvitationPreview = {
   role: string;
   expiresAt: string;
 };
+
+type InvitationRow = Tables<"invitations">;
 
 export async function getInvitationPreview(
   token: string,
@@ -30,10 +38,33 @@ export async function getInvitationPreview(
   };
 }
 
+/**
+ * Claim invitation first (single-use), then create Auth user + profile.
+ * Rolls invitation back to pending if account creation fails.
+ */
 export async function acceptInvitation(input: AcceptInvitationInput) {
   const values = acceptInvitationSchema.parse(input);
   const invitation = await loadValidPendingInvitation(values.token);
   const admin = createAdminClient();
+
+  const claimedAt = new Date().toISOString();
+  const { data: claimed, error: claimError } = await admin
+    .from("invitations")
+    .update({
+      status: "accepted",
+      accepted_at: claimedAt,
+    })
+    .eq("id", invitation.id)
+    .eq("status", "pending")
+    .gt("expires_at", claimedAt)
+    .select("id")
+    .maybeSingle();
+
+  if (claimError || !claimed) {
+    throw new InvitationError(
+      "This invitation has already been used or is no longer valid.",
+    );
+  }
 
   const { data: created, error: createError } =
     await admin.auth.admin.createUser({
@@ -53,7 +84,13 @@ export async function acceptInvitation(input: AcceptInvitationInput) {
     });
 
   if (createError || !created.user) {
-    throw new Error(createError?.message ?? "Failed to create user account.");
+    await releaseInvitationClaim(admin, invitation.id);
+    const message = createError?.message?.toLowerCase() ?? "";
+    if (message.includes("already") || message.includes("registered")) {
+      throw new InvitationError("A user with this email already exists.");
+    }
+    console.error("invite accept createUser failed", createError?.message);
+    throw new InvitationError("Failed to create user account.");
   }
 
   const { error: profileError } = await admin
@@ -68,24 +105,20 @@ export async function acceptInvitation(input: AcceptInvitationInput) {
 
   if (profileError) {
     console.error("profile update after invite accept failed", profileError.message);
+    await admin.auth.admin.deleteUser(created.user.id);
+    await releaseInvitationClaim(admin, invitation.id);
+    throw new InvitationError(
+      "Failed to finalize your account. Please try again.",
+    );
   }
 
-  const { data: claimed, error: claimError } = await admin
+  const { error: linkError } = await admin
     .from("invitations")
-    .update({
-      status: "accepted",
-      accepted_at: new Date().toISOString(),
-      accepted_user_id: created.user.id,
-    })
-    .eq("id", invitation.id)
-    .eq("status", "pending")
-    .select("id")
-    .maybeSingle();
+    .update({ accepted_user_id: created.user.id })
+    .eq("id", invitation.id);
 
-  if (claimError || !claimed) {
-    // Roll back auth user if invitation was raced/reused
-    await admin.auth.admin.deleteUser(created.user.id);
-    throw new Error("This invitation has already been used or is no longer valid.");
+  if (linkError) {
+    console.error("invitation user link failed", linkError.message);
   }
 
   await writeInvitationAuditLog({
@@ -102,14 +135,33 @@ export async function acceptInvitation(input: AcceptInvitationInput) {
   });
 
   if (signInError) {
-    // Account exists; user can sign in manually.
     return { signedIn: false as const, email: invitation.email };
   }
 
   return { signedIn: true as const, email: invitation.email };
 }
 
-async function loadValidPendingInvitation(token: string) {
+async function releaseInvitationClaim(
+  admin: ReturnType<typeof createAdminClient>,
+  invitationId: string,
+) {
+  const { error } = await admin
+    .from("invitations")
+    .update({
+      status: "pending",
+      accepted_at: null,
+      accepted_user_id: null,
+    })
+    .eq("id", invitationId)
+    .eq("status", "accepted")
+    .is("accepted_user_id", null);
+
+  if (error) {
+    console.error("failed to release invitation claim", error.message);
+  }
+}
+
+async function loadValidPendingInvitation(token: string): Promise<InvitationRow> {
   const admin = createAdminClient();
   const tokenHash = hashInvitationToken(token);
 
@@ -120,40 +172,35 @@ async function loadValidPendingInvitation(token: string) {
     .maybeSingle();
 
   if (error) {
-    throw new Error(error.message);
+    console.error("invitation load failed", error.message);
+    throw new InvitationError("Invitation not found or invalid.");
   }
   if (!invitation) {
-    throw new Error("Invitation not found or invalid.");
+    throw new InvitationError("Invitation not found or invalid.");
   }
 
   if (invitation.status === "accepted") {
-    throw new Error("This invitation has already been used.");
+    throw new InvitationError("This invitation has already been used.");
   }
   if (invitation.status === "revoked") {
-    throw new Error("This invitation has been revoked.");
+    throw new InvitationError("This invitation has been revoked.");
   }
 
   if (
     invitation.status === "expired" ||
-    new Date(invitation.expires_at).getTime() <= Date.now()
+    isInvitationExpired(invitation.expires_at)
   ) {
     if (invitation.status === "pending") {
-      await admin
-        .from("invitations")
-        .update({ status: "expired" })
-        .eq("id", invitation.id)
-        .eq("status", "pending");
-      await writeInvitationAuditLog({
-        invitationId: invitation.id,
-        action: "expired",
-        metadata: { reason: "checked_on_accept" },
+      await markInvitationsExpired({
+        ids: [invitation.id],
+        reason: "checked_on_accept",
       });
     }
-    throw new Error("This invitation has expired.");
+    throw new InvitationError("This invitation has expired.");
   }
 
   if (invitation.status !== "pending") {
-    throw new Error("This invitation is no longer valid.");
+    throw new InvitationError("This invitation is no longer valid.");
   }
 
   return invitation;

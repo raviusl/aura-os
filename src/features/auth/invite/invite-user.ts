@@ -1,13 +1,18 @@
 import "server-only";
 
-import { siteConfig } from "@/config/site";
 import { assertSuperAdmin } from "@/features/auth/lib/assert-super-admin";
 import {
   generateInvitationToken,
   hashInvitationToken,
 } from "@/features/auth/lib/invitation-token";
+import { requireAppUrl } from "@/features/auth/lib/require-app-url";
 import { sendInvitationEmail } from "@/features/auth/lib/send-invitation-email";
 import { writeInvitationAuditLog } from "@/features/auth/invite/audit";
+import { InvitationError } from "@/features/auth/invite/errors";
+import {
+  isInvitationExpired,
+  markInvitationsExpired,
+} from "@/features/auth/invite/expire-invitations";
 import {
   INVITATION_TTL_HOURS,
   INVITE_ROLE_LABELS,
@@ -19,9 +24,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export type InviteUserResult = {
   invitationId: string;
   email: string;
-  inviteUrl: string;
   expiresAt: string;
   emailSent: boolean;
+  /** Only returned when email was not delivered via Resend (manual share). */
+  inviteUrl?: string;
   emailWarning?: string;
 };
 
@@ -36,9 +42,10 @@ export async function inviteUser(
   const actor = await assertSuperAdmin();
   const admin = createAdminClient();
   const email = values.email.trim().toLowerCase();
+  const appUrl = requireAppUrl();
 
   if (await authUserExistsByEmail(admin, email)) {
-    throw new Error("A user with this email already exists.");
+    throw new InvitationError("A user with this email already exists.");
   }
 
   const { data: pendingInvite, error: pendingError } = await admin
@@ -49,31 +56,26 @@ export async function inviteUser(
     .maybeSingle();
 
   if (pendingError) {
-    throw new Error(pendingError.message);
+    console.error("pending invitation lookup failed", pendingError.message);
+    throw new InvitationError("Failed to create invitation.");
   }
 
   if (pendingInvite) {
-    if (new Date(pendingInvite.expires_at).getTime() > Date.now()) {
-      throw new Error(
+    if (!isInvitationExpired(pendingInvite.expires_at)) {
+      throw new InvitationError(
         "A pending invitation already exists for this email. Revoke it before inviting again.",
       );
     }
-    await admin
-      .from("invitations")
-      .update({ status: "expired" })
-      .eq("id", pendingInvite.id);
-    await writeInvitationAuditLog({
-      invitationId: pendingInvite.id,
-      action: "expired",
+    await markInvitationsExpired({
+      ids: [pendingInvite.id],
+      reason: "auto_expired_before_reinvite",
       actorId: actor.id,
-      metadata: { reason: "auto_expired_before_reinvite" },
     });
   }
 
   const token = generateInvitationToken();
   const tokenHash = hashInvitationToken(token);
   const expiresAt = new Date(Date.now() + INVITATION_TTL_HOURS * 60 * 60 * 1000);
-  const appUrl = siteConfig.url.replace(/\/$/, "");
   const inviteUrl = `${appUrl}/invite/accept?token=${encodeURIComponent(token)}`;
 
   const { data: invitation, error: insertError } = await admin
@@ -87,13 +89,18 @@ export async function inviteUser(
       status: "pending",
       invited_by: actor.id,
       expires_at: expiresAt.toISOString(),
-      last_sent_at: new Date().toISOString(),
     })
     .select("id")
     .single();
 
   if (insertError || !invitation) {
-    throw new Error(insertError?.message ?? "Failed to create invitation.");
+    if (insertError?.code === "23505") {
+      throw new InvitationError(
+        "A pending invitation already exists for this email. Revoke it before inviting again.",
+      );
+    }
+    console.error("invitation insert failed", insertError?.message);
+    throw new InvitationError("Failed to create invitation.");
   }
 
   await writeInvitationAuditLog({
@@ -117,25 +124,24 @@ export async function inviteUser(
     expiresAt,
   });
 
-  if (emailResult.ok && emailResult.provider === "resend") {
-    await writeInvitationAuditLog({
-      invitationId: invitation.id,
-      action: "emailed",
-      actorId: actor.id,
-      metadata: { provider: "resend", message_id: emailResult.id },
-    });
-  } else if (emailResult.ok && emailResult.provider === "dev_fallback") {
+  if (emailResult.ok) {
+    await admin
+      .from("invitations")
+      .update({ last_sent_at: new Date().toISOString() })
+      .eq("id", invitation.id);
+
     await writeInvitationAuditLog({
       invitationId: invitation.id,
       action: "emailed",
       actorId: actor.id,
       metadata: {
-        provider: "dev_fallback",
-        warning: emailResult.warning,
-        invite_url: inviteUrl,
+        provider: emailResult.provider,
+        ...(emailResult.provider === "resend"
+          ? { message_id: emailResult.id }
+          : { warning: emailResult.warning }),
       },
     });
-  } else if (!emailResult.ok) {
+  } else {
     await writeInvitationAuditLog({
       invitationId: invitation.id,
       action: "email_failed",
@@ -143,17 +149,18 @@ export async function inviteUser(
       metadata: {
         provider: emailResult.provider,
         error: emailResult.error,
-        invite_url: inviteUrl,
       },
     });
   }
 
+  const emailSent = emailResult.ok && emailResult.provider === "resend";
+
   return {
     invitationId: invitation.id,
     email,
-    inviteUrl,
     expiresAt: expiresAt.toISOString(),
-    emailSent: emailResult.ok && emailResult.provider === "resend",
+    emailSent,
+    inviteUrl: emailSent ? undefined : inviteUrl,
     emailWarning:
       emailResult.ok && emailResult.provider === "dev_fallback"
         ? emailResult.warning
@@ -167,18 +174,14 @@ async function authUserExistsByEmail(
   admin: ReturnType<typeof createAdminClient>,
   email: string,
 ) {
-  const perPage = 200;
-  for (let page = 1; page <= 25; page += 1) {
-    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
-    if (error) {
-      throw new Error(error.message);
-    }
-    if (data.users.some((user) => user.email?.toLowerCase() === email)) {
-      return true;
-    }
-    if (data.users.length < perPage) {
-      return false;
-    }
+  const { data, error } = await admin.rpc("auth_user_exists_by_email", {
+    p_email: email,
+  });
+
+  if (error) {
+    console.error("auth_user_exists_by_email failed", error.message);
+    throw new InvitationError("Failed to verify email availability.");
   }
-  return false;
+
+  return Boolean(data);
 }

@@ -12,16 +12,23 @@ Build a production-ready **Super Admin invitation management system**.
 - Invitation email via Resend (with manual-link fallback)
 - Accept invitation → create password → login
 - Audit log for invitation lifecycle
-- SQL migration `20260716000300_sprint007_invitations.sql`
+- SQL migrations:
+  - `20260716000300_sprint007_invitations.sql`
+  - `20260716000400_sprint007_invitation_hardening.sql`
 
 ## Explicit rules
 
 - No public registration
 - Only Super Admins can invite
 - Token never stored in plaintext (SHA-256 hash only)
+- Audit metadata must never include invitation tokens or invite URLs
+- Invitation is claimed before Auth user creation (single-use under concurrency)
 
-## Apply migration
+## Apply migrations
 
-Run in Supabase SQL Editor:
+Run in Supabase SQL Editor (in order):
 
-`supabase/migrations/20260716000300_sprint007_invitations.sql`
+1. `supabase/migrations/20260716000300_sprint007_invitations.sql`
+2. `supabase/migrations/20260716000400_sprint007_invitation_hardening.sql`
+
+Also set `NEXT_PUBLIC_APP_URL` to the public production origin before sending invites.

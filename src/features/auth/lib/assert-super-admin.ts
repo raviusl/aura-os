@@ -1,20 +1,16 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
 import { isSuperAdmin } from "@/features/auth/lib/platform-role";
+import { getSessionUser } from "@/features/auth/lib/get-session-user";
 
 /**
  * Ensures the current session belongs to a Super Admin.
  * Used by invite (and future admin) server operations.
  */
 export async function assertSuperAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
 
-  if (error || !user || !isSuperAdmin(user)) {
+  if (!user || !isSuperAdmin(user)) {
     throw new Error("Only Super Admins can perform this action.");
   }
 

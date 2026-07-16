@@ -51,10 +51,12 @@ export function InviteUserForm() {
             if (result.data.emailWarning) {
               toast.message(result.data.emailWarning);
             }
-            toast.message("Invite link (copy now)", {
-              description: result.data.inviteUrl,
-              duration: 20_000,
-            });
+            if (result.data.inviteUrl) {
+              toast.message("Invite link (copy now)", {
+                description: result.data.inviteUrl,
+                duration: 20_000,
+              });
+            }
           }
 
           router.push("/dashboard/settings/users");

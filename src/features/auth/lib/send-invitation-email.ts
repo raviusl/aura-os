@@ -36,7 +36,7 @@ export async function sendInvitationEmail(
         <strong>${escapeHtml(input.roleLabel)}</strong>.
       </p>
       <p style="margin: 28px 0;">
-        <a href="${input.inviteUrl}" style="display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 10px; font-size: 14px;">
+        <a href="${escapeHtml(input.inviteUrl)}" style="display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 10px; font-size: 14px;">
           Accept invitation
         </a>
       </p>

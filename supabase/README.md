@@ -13,11 +13,13 @@ Aura OS does **not** allow public Sign Up.
    - `http://localhost:3000/invite/accept`
    - (and the same paths for production `NEXT_PUBLIC_APP_URL`)
 
-5. Run Sprint 007 migration in SQL Editor:
+5. Run Sprint 007 migrations in SQL Editor (in order):
 
-`supabase/migrations/20260716000300_sprint007_invitations.sql`
+- `supabase/migrations/20260716000300_sprint007_invitations.sql`
+- `supabase/migrations/20260716000400_sprint007_invitation_hardening.sql`
 
 Bootstrap Super Admins via `SUPER_ADMIN_EMAILS` in `.env.local`.  
+Set `NEXT_PUBLIC_APP_URL` to the public origin used in invite emails.  
 Configure `RESEND_API_KEY` to send invitation emails (optional for local; invite URL is shown if unset).
 
 See [docs/AUTH.md](../docs/AUTH.md).

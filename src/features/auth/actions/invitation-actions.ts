@@ -3,13 +3,12 @@
 import { revalidatePath } from "next/cache";
 
 import { acceptInvitation } from "@/features/auth/invite/accept-invitation";
+import { toInvitationActionError } from "@/features/auth/invite/errors";
 import { inviteUser } from "@/features/auth/invite/invite-user";
 import { revokeInvitation } from "@/features/auth/invite/list-invitations";
-import {
-  acceptInvitationSchema,
-  inviteUserSchema,
-  type AcceptInvitationInput,
-  type InviteUserInput,
+import type {
+  AcceptInvitationInput,
+  InviteUserInput,
 } from "@/features/auth/schemas/invite";
 
 export type ActionResult<T = undefined> =
@@ -22,21 +21,20 @@ export async function createInvitationAction(
   ActionResult<{
     invitationId: string;
     email: string;
-    inviteUrl: string;
     expiresAt: string;
     emailSent: boolean;
+    inviteUrl?: string;
     emailWarning?: string;
   }>
 > {
   try {
-    const values = inviteUserSchema.parse(input);
-    const result = await inviteUser(values);
+    const result = await inviteUser(input);
     revalidatePath("/dashboard/settings/users");
     return { ok: true, data: result };
   } catch (error) {
     return {
       ok: false,
-      error: error instanceof Error ? error.message : "Failed to invite user",
+      error: toInvitationActionError(error, "Failed to invite user"),
     };
   }
 }
@@ -51,8 +49,7 @@ export async function revokeInvitationAction(
   } catch (error) {
     return {
       ok: false,
-      error:
-        error instanceof Error ? error.message : "Failed to revoke invitation",
+      error: toInvitationActionError(error, "Failed to revoke invitation"),
     };
   }
 }
@@ -61,14 +58,12 @@ export async function acceptInvitationAction(
   input: AcceptInvitationInput,
 ): Promise<ActionResult<{ signedIn: boolean; email: string }>> {
   try {
-    const values = acceptInvitationSchema.parse(input);
-    const result = await acceptInvitation(values);
+    const result = await acceptInvitation(input);
     return { ok: true, data: result };
   } catch (error) {
     return {
       ok: false,
-      error:
-        error instanceof Error ? error.message : "Failed to accept invitation",
+      error: toInvitationActionError(error, "Failed to accept invitation"),
     };
   }
 }

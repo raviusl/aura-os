@@ -2,14 +2,11 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 
+import { getSessionUser } from "@/features/auth/lib/get-session-user";
 import { isSuperAdmin } from "@/features/auth/lib/platform-role";
-import { createClient } from "@/lib/supabase/server";
 
 export async function requireSuperAdminPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
 
   if (!user || !isSuperAdmin(user)) {
     redirect("/dashboard/settings");
@@ -19,9 +16,6 @@ export async function requireSuperAdminPage() {
 }
 
 export async function getSessionIsSuperAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   return isSuperAdmin(user);
 }

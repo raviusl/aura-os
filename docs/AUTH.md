@@ -31,9 +31,12 @@ Also add redirect URLs for:
 - `{APP_URL}/auth/callback?next=/auth/update-password`
 - `{APP_URL}/invite/accept`
 
-Apply migration:
+Apply migrations (in order):
 
-`supabase/migrations/20260716000300_sprint007_invitations.sql`
+1. `supabase/migrations/20260716000300_sprint007_invitations.sql`
+2. `supabase/migrations/20260716000400_sprint007_invitation_hardening.sql`
+
+Set `NEXT_PUBLIC_APP_URL` to the public production origin (required for invite links in production).
 
 ## Super Admin
 
@@ -68,7 +71,7 @@ sequenceDiagram
   App->>Mail: Send invite email
   Mail->>User: Accept link
   User->>App: /invite/accept + password
-  App->>App: Validate token, mark accepted, create Auth user
+  App->>App: Claim invitation, then create Auth user
   User->>App: Signed in / login
 ```
 
@@ -77,8 +80,9 @@ sequenceDiagram
 | Rule | Enforcement |
 | --- | --- |
 | 72h expiry | `expires_at` + status `expired` |
-| Single use | status must be `pending`; claim is conditional update |
-| Audit | `invitation_audit_logs` for created / emailed / accepted / revoked / expired |
+| Single use | claim `pending` → `accepted` before `createUser` |
+| One pending per email | unique partial index on `lower(email)` |
+| Audit | `invitation_audit_logs` (no tokens / invite URLs in metadata) |
 | No plaintext token | only `token_hash` (SHA-256) stored |
 
 ### Key paths
@@ -93,9 +97,11 @@ sequenceDiagram
 ## Environment
 
 ```bash
+NEXT_PUBLIC_APP_URL=https://your-production-domain.com
 SUPER_ADMIN_EMAILS=owner@yourcompany.com
 RESEND_API_KEY=re_xxx
 RESEND_FROM_EMAIL=Aura OS <onboarding@resend.dev>
+SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
 Without `RESEND_API_KEY`, invitations are still created and the Super Admin is shown the invite URL to copy.
