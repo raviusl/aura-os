@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -29,23 +27,32 @@ function Navbar({
       {...props}
     >
       {brand ? (
-        <div data-slot="navbar-brand" className="flex min-w-0 shrink-0 items-center gap-2">
+        <div
+          data-slot="navbar-brand"
+          className="flex min-w-0 shrink-0 items-center gap-2"
+        >
           {brand}
         </div>
       ) : null}
 
       {search ? (
-        <div data-slot="navbar-search" className="hidden min-w-0 flex-1 md:block">
+        <div
+          data-slot="navbar-search"
+          className="hidden min-w-0 flex-1 md:block"
+        >
           {search}
         </div>
-      ) : (
-        <div className="min-w-0 flex-1" />
-      )}
+      ) : null}
+
+      <div className="min-w-0 flex-1" />
 
       {children}
 
       {actions ? (
-        <div data-slot="navbar-actions" className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <div
+          data-slot="navbar-actions"
+          className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+        >
           {actions}
         </div>
       ) : null}
@@ -53,15 +60,13 @@ function Navbar({
   );
 }
 
-function NavbarDivider({ className, ...props }: React.ComponentProps<"div">) {
+function NavbarDivider({ className }: { className?: string }) {
   return (
-    <div
+    <Separator
+      orientation="vertical"
       data-slot="navbar-divider"
-      className={cn("hidden h-6 items-center sm:flex", className)}
-      {...props}
-    >
-      <Separator orientation="vertical" className="h-full" />
-    </div>
+      className={cn("hidden h-6 sm:block", className)}
+    />
   );
 }
 

@@ -1,6 +1,4 @@
-"use client";
-
-import * as React from "react";
+import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -10,52 +8,31 @@ const statusBadgeVariants = cva(
   {
     variants: {
       status: {
-        default:
-          "border-border bg-muted text-muted-foreground",
-        success:
-          "border-success/20 bg-success/10 text-success",
-        warning:
-          "border-warning/20 bg-warning/10 text-warning",
-        danger:
-          "border-destructive/20 bg-destructive/10 text-destructive",
-        info:
-          "border-info/20 bg-info/10 text-info",
-        pending:
-          "border-warning/20 bg-warning/10 text-warning",
-        active:
-          "border-success/20 bg-success/10 text-success",
-        inactive:
-          "border-border bg-muted text-muted-foreground",
-      },
-      showDot: {
-        true: "",
-        false: "",
+        default: "border-border bg-muted text-muted-foreground",
+        success: "border-success/20 bg-success/10 text-success",
+        warning: "border-warning/20 bg-warning/10 text-warning",
+        danger: "border-destructive/20 bg-destructive/10 text-destructive",
+        info: "border-info/20 bg-info/10 text-info",
       },
     },
     defaultVariants: {
       status: "default",
-      showDot: true,
     },
   },
 );
 
-const statusDotClass: Record<
-  NonNullable<VariantProps<typeof statusBadgeVariants>["status"]>,
-  string
-> = {
+const statusDotClass = {
   default: "bg-muted-foreground",
   success: "bg-success",
   warning: "bg-warning",
   danger: "bg-destructive",
   info: "bg-info",
-  pending: "bg-warning",
-  active: "bg-success",
-  inactive: "bg-muted-foreground",
-};
+} as const;
 
-type StatusBadgeProps = React.ComponentProps<"span"> &
+type StatusBadgeProps = ComponentProps<"span"> &
   VariantProps<typeof statusBadgeVariants> & {
     label?: string;
+    showDot?: boolean;
   };
 
 function StatusBadge({
@@ -71,7 +48,7 @@ function StatusBadge({
   return (
     <span
       data-slot="status-badge"
-      className={cn(statusBadgeVariants({ status: resolved, showDot }), className)}
+      className={cn(statusBadgeVariants({ status: resolved }), className)}
       {...props}
     >
       {showDot ? (

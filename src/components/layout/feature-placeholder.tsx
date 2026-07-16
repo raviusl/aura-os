@@ -1,5 +1,5 @@
+import { AppEmptyState } from "@/components/layout/app-empty-state";
 import { Bilingual } from "@/components/ui/bilingual";
-import { EmptyState } from "@/components/ui/empty-state";
 import type { BilingualText } from "@/config/i18n";
 
 export function FeaturePlaceholder({ title }: { title: BilingualText }) {
@@ -10,7 +10,7 @@ export function FeaturePlaceholder({ title }: { title: BilingualText }) {
         zhClassName="text-xl text-white"
         enClassName="text-white/40"
       />
-      <EmptyState />
+      <AppEmptyState />
     </div>
   );
 }

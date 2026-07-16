@@ -73,13 +73,13 @@ CSS variable `--radius: 0.625rem` with derived tokens:
 
 ## 5. Shadow
 
-Quiet elevation only:
+Quiet elevation via CSS variables (use as `shadow-soft-sm` / `shadow-soft-md` / `shadow-soft-lg`, or `box-shadow: var(--shadow-sm)`):
 
 | Token | Use |
 | --- | --- |
-| `--shadow-sm` | Subtle resting controls |
-| `--shadow-md` | Popovers, dropdowns |
-| `--shadow-lg` | Dialogs, drawers |
+| `--shadow-sm` / `shadow-soft-sm` | Subtle resting controls |
+| `--shadow-md` / `shadow-soft-md` | Popovers, dropdowns |
+| `--shadow-lg` / `shadow-soft-lg` | Dialogs, drawers |
 
 Prefer `ring-1 ring-foreground/10` on cards over heavy drop shadows.
 
@@ -154,22 +154,22 @@ All live under `src/components/ui/`.
 | Dialog | `dialog.tsx` | Modal |
 | Drawer | `drawer.tsx` | Mobile-friendly sheet |
 | Tabs | `tabs.tsx` | |
-| Dropdown | `dropdown.tsx` | Alias of `dropdown-menu` |
+| Dropdown | `dropdown-menu.tsx` | shadcn `DropdownMenu*` (no alias layer) |
 | Sidebar | `sidebar.tsx` | shadcn sidebar primitives |
 | Navbar | `navbar.tsx` | Brand / search / actions slots |
 | Breadcrumb | `breadcrumb.tsx` | |
 | Table | `table.tsx` | |
-| EmptyState | `empty-state.tsx` | String or bilingual |
+| EmptyState | `empty-state.tsx` | Presentational; no i18n |
 | Loading | `loading.tsx` | Spinner + label |
 | Skeleton | `skeleton.tsx` | |
-| StatusBadge | `status-badge.tsx` | success / warning / danger / info |
+| StatusBadge | `status-badge.tsx` | `default` \| `success` \| `warning` \| `danger` \| `info` |
 | Progress | `progress.tsx` | |
 | Timeline | `timeline.tsx` | Vertical list |
-| Uploader | `uploader.tsx` | Drag-and-drop + browse |
+| Uploader | `uploader.tsx` | Drag-and-drop + click to browse |
 | DatePicker | `date-picker.tsx` | Popover + Calendar |
 | Calendar | `calendar.tsx` | react-day-picker |
 
-Barrel: `src/components/ui/index.ts` (prefer direct file imports for tree-shaking).
+**Import rule:** always import from the component file (`@/components/ui/button`), never a barrel. App bilingual empty states use `AppEmptyState` from `@/components/layout/app-empty-state`.
 
 ---
 
@@ -181,7 +181,7 @@ Barrel: `src/components/ui/index.ts` (prefer direct file imports for tree-shakin
 | `data-slot` attributes | `data-slot="button"` |
 | CVA variants co-located | `buttonVariants`, `tagVariants` |
 | Compound parts | `DialogContent`, `SidebarMenuButton` |
-| Design-system aliases | `Dropdown*` → wraps `DropdownMenu*` |
+| Stay close to shadcn names | `DropdownMenu*`, not a parallel `Dropdown*` API |
 
 ---
 
@@ -189,11 +189,13 @@ Barrel: `src/components/ui/index.ts` (prefer direct file imports for tree-shakin
 
 | Status | Component | Example |
 | --- | --- | --- |
-| Active / Done | `StatusBadge status="success"` | Confirmed event |
-| Pending | `StatusBadge status="pending"` | Awaiting payment |
+| Success / done | `StatusBadge status="success"` | Confirmed event |
+| Warning / pending | `StatusBadge status="warning"` | Awaiting payment |
 | Danger | `StatusBadge status="danger"` | Overdue / cancelled |
 | Info | `StatusBadge status="info"` | In progress |
 | Neutral | `StatusBadge status="default"` | Archived |
+
+Domain labels (`pending`, `active`) map to these tokens at the feature layer — do not duplicate aliases in the design system.
 
 Do not invent ad-hoc hex colors in features — extend tokens in `globals.css`.
 
@@ -202,10 +204,11 @@ Do not invent ad-hoc hex colors in features — extend tokens in `globals.css`.
 ## 11. Accessibility baseline
 
 - Focus-visible rings via `--ring`
-- `aria-*` / `role` on Loading, Uploader, Timeline
+- `aria-label` / `role="status"` on Loading
 - Icon-only controls need `aria-label`
 - Dialog / Drawer use Base UI primitives with focus trap
 - Color is never the only status signal (dot + label)
+- Avoid nested interactive controls (e.g. button inside button)
 
 ---
 
@@ -230,6 +233,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 ```
 
 ```tsx
+import { AppEmptyState } from "@/components/layout/app-empty-state";
+
+<AppEmptyState />
+```
+
+```tsx
 import { Timeline } from "@/components/ui/timeline";
 
 <Timeline
@@ -249,6 +258,7 @@ import { Timeline } from "@/components/ui/timeline";
 | Reusable UI primitives | Build business pages |
 | Tokens + docs | Change database schema |
 | Dark mode + a11y | Add mock data beyond tiny examples in docs |
+| Direct file imports | Barrel re-exports that pull unused client code |
 
 ---
 

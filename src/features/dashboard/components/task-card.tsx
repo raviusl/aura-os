@@ -1,6 +1,6 @@
+import { AppEmptyState } from "@/components/layout/app-empty-state";
 import { Bilingual } from "@/components/ui/bilingual";
 import { Badge } from "@/components/ui/badge";
-import { EmptyState } from "@/components/ui/empty-state";
 import { copy } from "@/config/i18n";
 import type { TaskPriority, Tables } from "@/types/database";
 
@@ -38,7 +38,7 @@ export function TaskCard({ tasks }: TaskCardProps) {
 
       {tasks.length === 0 ? (
         <div className="mt-4">
-          <EmptyState />
+          <AppEmptyState />
         </div>
       ) : (
         <div className="mt-4 overflow-hidden rounded-xl border border-white/[0.05]">

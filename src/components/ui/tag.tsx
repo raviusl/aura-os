@@ -28,13 +28,7 @@ type TagProps = React.ComponentProps<"span"> &
     onRemove?: () => void;
   };
 
-function Tag({
-  className,
-  variant,
-  children,
-  onRemove,
-  ...props
-}: TagProps) {
+function Tag({ className, variant, children, onRemove, ...props }: TagProps) {
   return (
     <span
       data-slot="tag"

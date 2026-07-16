@@ -1,27 +1,22 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { Bilingual } from "@/components/ui/bilingual";
-import { copy } from "@/config/i18n";
-
-type BilingualText = { zh: string; en: string };
 
 type EmptyStateProps = {
   className?: string;
-  title?: string | BilingualText;
-  description?: string | BilingualText;
+  title?: ReactNode;
+  description?: ReactNode;
   icon?: ReactNode;
   action?: ReactNode;
 };
 
-function isBilingual(value: string | BilingualText): value is BilingualText {
-  return typeof value === "object" && value !== null && "zh" in value && "en" in value;
-}
-
-export function EmptyState({
+/**
+ * Presentational empty state. Keep copy/i18n at the call site (or use AppEmptyState).
+ */
+function EmptyState({
   className,
-  title = copy.emptyTitle,
-  description = copy.emptyDescription,
+  title = "Nothing here yet",
+  description = "Add an item to get started.",
   icon,
   action,
 }: EmptyStateProps) {
@@ -39,27 +34,19 @@ export function EmptyState({
         </div>
       ) : null}
 
-      {isBilingual(title) ? (
-        <Bilingual
-          text={title}
-          className="items-center"
-          zhClassName="text-sm text-foreground/90"
-          enClassName="text-muted-foreground"
-        />
-      ) : (
+      {typeof title === "string" ? (
         <p className="text-sm font-medium text-foreground">{title}</p>
+      ) : (
+        title
       )}
 
       {description ? (
-        isBilingual(description) ? (
-          <Bilingual
-            text={description}
-            className="mt-2 max-w-xs items-center"
-            zhClassName="text-xs font-normal text-muted-foreground"
-            enClassName="text-[11px] text-muted-foreground/80"
-          />
+        typeof description === "string" ? (
+          <p className="mt-2 max-w-sm text-xs text-muted-foreground">
+            {description}
+          </p>
         ) : (
-          <p className="mt-2 max-w-sm text-xs text-muted-foreground">{description}</p>
+          <div className="mt-2 max-w-sm">{description}</div>
         )
       ) : null}
 
@@ -68,4 +55,5 @@ export function EmptyState({
   );
 }
 
+export { EmptyState };
 export type { EmptyStateProps };

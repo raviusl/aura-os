@@ -16,7 +16,7 @@ Build the **Aura OS Design System foundation** — reusable UI components only.
 | Path | Description |
 | --- | --- |
 | `src/components/ui/*` | Primitive components (Button → Calendar, plus custom Tag, StatusBadge, etc.) |
-| `src/components/ui/index.ts` | Barrel exports |
+| `src/components/layout/app-empty-state.tsx` | Bilingual empty state wrapper (keeps UI kit free of i18n) |
 | `src/app/globals.css` | Status / shadow / motion tokens |
 | `docs/DESIGN_SYSTEM.md` | Design system documentation |
 | `docs/SPRINT006.md` | This summary |

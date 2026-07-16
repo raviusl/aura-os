@@ -1,5 +1,5 @@
+import { AppEmptyState } from "@/components/layout/app-empty-state";
 import { Bilingual } from "@/components/ui/bilingual";
-import { EmptyState } from "@/components/ui/empty-state";
 import { copy } from "@/config/i18n";
 
 type RevenueCardsProps = {
@@ -55,7 +55,7 @@ export function RevenueCards({
     return (
       <section className="space-y-3">
         <Bilingual text={copy.monthlyRevenue} zhClassName="text-sm text-white/80" />
-        <EmptyState />
+        <AppEmptyState />
       </section>
     );
   }
