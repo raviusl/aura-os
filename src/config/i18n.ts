@@ -1,8 +1,3 @@
-export type BilingualText = {
-  zh: string;
-  en: string;
-};
-
 export const navItems = [
   {
     href: "/dashboard",
@@ -11,6 +6,15 @@ export const navItems = [
     label: {
       zh: "仪表板",
       en: "Dashboard",
+    },
+  },
+  {
+    href: "/dashboard/projects",
+    icon: "folder",
+    emoji: "📁",
+    label: {
+      zh: "项目",
+      en: "Projects",
     },
   },
   {
@@ -23,42 +27,6 @@ export const navItems = [
     },
   },
   {
-    href: "/dashboard/weddings",
-    icon: "heart",
-    emoji: "💍",
-    label: {
-      zh: "婚礼管理",
-      en: "Wedding Management",
-    },
-  },
-  {
-    href: "/dashboard/calendar",
-    icon: "calendar",
-    emoji: "📅",
-    label: {
-      zh: "日历",
-      en: "Calendar",
-    },
-  },
-  {
-    href: "/dashboard/tasks",
-    icon: "check",
-    emoji: "✅",
-    label: {
-      zh: "任务",
-      en: "Tasks",
-    },
-  },
-  {
-    href: "/dashboard/finance",
-    icon: "finance",
-    emoji: "💰",
-    label: {
-      zh: "财务",
-      en: "Finance",
-    },
-  },
-  {
     href: "/dashboard/vendors",
     icon: "handshake",
     emoji: "🤝",
@@ -68,33 +36,20 @@ export const navItems = [
     },
   },
   {
-    href: "/dashboard/team",
-    icon: "team",
-    emoji: "👨🏻‍💼",
-    label: {
-      zh: "团队",
-      en: "Team",
-    },
-  },
-  {
-    href: "/dashboard/ai",
-    icon: "bot",
-    emoji: "🤖",
-    label: {
-      zh: "AI 助理",
-      en: "AI Assistant",
-    },
-  },
-  {
     href: "/dashboard/settings",
     icon: "settings",
     emoji: "⚙️",
     label: {
-      zh: "系统设置",
+      zh: "设置",
       en: "Settings",
     },
   },
 ] as const;
+
+export type BilingualText = {
+  zh: string;
+  en: string;
+};
 
 export const copy = {
   appName: { zh: "Aura OS", en: "Aura OS" },
@@ -129,6 +84,11 @@ export const copy = {
   emptyDescription: {
     zh: "数据库中尚无记录。添加后会显示在这里。",
     en: "Nothing in the database yet. Items will appear here once created.",
+  },
+  comingSoonTitle: { zh: "即将推出", en: "Coming soon" },
+  comingSoonDescription: {
+    zh: "此模块尚未开放。请先使用项目、客户与供应商。",
+    en: "This module is not available yet. Use Projects, Clients, and Vendors for now.",
   },
   signIn: { zh: "登录", en: "Sign In" },
   email: { zh: "邮箱", en: "Email" },

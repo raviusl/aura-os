@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { Client } from "@/core/types";
+import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 
 type ClientsPanelProps = {
   clients: Client[];
@@ -30,24 +31,29 @@ export function ClientsPanel({
     <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-sm font-medium text-white">Clients</h2>
-          <p className="mt-1 text-xs text-white/45">
-            Active company: {companyName}
-          </p>
+          <h2 className="text-sm font-medium text-white">
+            Clients ({visible.length})
+          </h2>
+          <p className="mt-1 text-xs text-white/45">{companyName}</p>
         </div>
         {canWrite ? (
           <Link
             href="/dashboard/clients/new"
             className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/[0.05]"
           >
-            New client
+            New
           </Link>
         ) : null}
       </div>
 
       {visible.length === 0 ? (
-        <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-6 text-sm text-white/45">
-          No clients in this company yet.
+        <div className="mt-4">
+          <ModuleEmptyState
+            title="No clients yet"
+            description="Add Bride, Groom, Corporate, or Individual clients for this company."
+            actionHref={canWrite ? "/dashboard/clients/new" : undefined}
+            actionLabel={canWrite ? "Create client" : undefined}
+          />
         </div>
       ) : (
         <ul className="mt-4 space-y-2">
@@ -61,14 +67,17 @@ export function ClientsPanel({
                   <p className="truncate text-sm text-white">{client.name}</p>
                   <p className="mt-1 text-xs text-white/40">
                     {typeLabel(client.client_type)} · {statusLabel(client.status)}
-                    {client.email ? ` · ${client.email}` : ""}
                   </p>
                 </div>
                 <Link
-                  href="/dashboard/clients"
+                  href={
+                    canWrite
+                      ? `/dashboard/clients/${client.id}/edit`
+                      : "/dashboard/clients"
+                  }
                   className="shrink-0 text-xs text-white/45 hover:text-white/70"
                 >
-                  View
+                  {canWrite ? "Edit" : "View"}
                 </Link>
               </div>
             </li>
@@ -76,15 +85,13 @@ export function ClientsPanel({
         </ul>
       )}
 
-      {clients.length > 0 ? (
+      {visible.length > 0 ? (
         <div className="mt-3">
           <Link
             href="/dashboard/clients"
             className="text-xs text-white/45 hover:text-white/70"
           >
-            {clients.length > 6
-              ? `View all ${clients.length} clients →`
-              : "Manage clients →"}
+            Manage clients →
           </Link>
         </div>
       ) : null}

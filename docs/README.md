@@ -48,9 +48,10 @@ Earlier Aura OS sprint docs remain for reference only. Where they conflict with 
 - **Sprint 014 Project Domain** — implemented (`docs/SPRINT014.md`)
 - **Sprint 015 Client Domain** — implemented (`docs/SPRINT015.md`)
 - **Sprint 016 Vendor Domain** — implemented (`docs/SPRINT016.md`)
+- **MVP usability pass** — implemented (`docs/MVP.md`) — real dashboard, CRUD, nav, mobile
 - **Security / RLS strategy** — [SECURITY.md](./SECURITY.md) (RLS enabled; tenant policies deferred by design)
 - **Prototype V0** — archived UI remains; do not extend business modules
-- **Next** — next sprint after CTO review
+- **Next** — deepen workflows on existing domains after CTO review
 
 ## Related project docs
 

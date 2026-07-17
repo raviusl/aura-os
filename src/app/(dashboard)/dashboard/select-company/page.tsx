@@ -1,8 +1,11 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 import { requireSessionUserId } from "@/core/auth/session";
 import { listCompaniesForUserInWorkspace } from "@/core/company/active-company";
 import { resolveActiveWorkspace } from "@/core/workspace/active-workspace";
 import { CompanySelectList } from "@/features/context/components/company-select-list";
-import { redirect } from "next/navigation";
 
 export default async function SelectCompanyPage() {
   const userId = await requireSessionUserId();
@@ -25,12 +28,22 @@ export default async function SelectCompanyPage() {
       </div>
 
       {companies.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 px-5 py-8 text-sm text-white/45">
-          No companies in this workspace yet.
-        </div>
+        <ModuleEmptyState
+          title="No companies yet"
+          description="Create a company in this workspace to continue."
+          actionHref="/dashboard/companies/new"
+          actionLabel="Create company"
+        />
       ) : (
         <CompanySelectList workspaceId={workspace.id} companies={companies} />
       )}
+
+      <Link
+        href="/dashboard/select-workspace"
+        className="inline-block text-xs text-white/40 hover:text-white/70"
+      >
+        ← Switch workspace
+      </Link>
     </div>
   );
 }

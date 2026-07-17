@@ -40,7 +40,7 @@ export function ClientListItem({
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 sm:px-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-white">{client.name}</p>
@@ -52,6 +52,19 @@ export function ClientListItem({
         </div>
         {canWrite ? (
           <div className="flex flex-wrap gap-2">
+            {client.status !== "archived" ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={pending}
+                onClick={() =>
+                  router.push(`/dashboard/clients/${client.id}/edit`)
+                }
+              >
+                Edit
+              </Button>
+            ) : null}
             {client.status === "active" ? (
               <Button
                 type="button"

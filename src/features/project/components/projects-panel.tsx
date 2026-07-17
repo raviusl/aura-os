@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { Project } from "@/core/types";
+import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 
 type ProjectsPanelProps = {
   projects: Project[];
@@ -25,30 +26,37 @@ export function ProjectsPanel({
   companyName,
   canWrite,
 }: ProjectsPanelProps) {
-  const activeProjects = projects.filter((project) => project.status !== "archived");
+  const activeProjects = projects.filter(
+    (project) => project.status !== "archived",
+  );
 
   return (
     <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-sm font-medium text-white">Projects</h2>
-          <p className="mt-1 text-xs text-white/45">
-            Active company: {companyName}
-          </p>
+          <h2 className="text-sm font-medium text-white">
+            Projects ({activeProjects.length})
+          </h2>
+          <p className="mt-1 text-xs text-white/45">{companyName}</p>
         </div>
         {canWrite ? (
           <Link
             href="/dashboard/projects/new"
             className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/[0.05]"
           >
-            New project
+            New
           </Link>
         ) : null}
       </div>
 
       {activeProjects.length === 0 ? (
-        <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-6 text-sm text-white/45">
-          No projects in this company yet.
+        <div className="mt-4">
+          <ModuleEmptyState
+            title="No projects yet"
+            description="Create a project to organize clients and vendors for this company."
+            actionHref={canWrite ? "/dashboard/projects/new" : undefined}
+            actionLabel={canWrite ? "Create project" : undefined}
+          />
         </div>
       ) : (
         <ul className="mt-4 space-y-2">
@@ -63,15 +71,19 @@ export function ProjectsPanel({
                   <p className="mt-1 text-xs text-white/40">
                     {statusLabel(project.status)}
                     {project.project_type ? ` · ${project.project_type}` : ""}
-                    {" · Updated "}
+                    {" · "}
                     {formatDate(project.updated_at)}
                   </p>
                 </div>
                 <Link
-                  href="/dashboard/projects"
+                  href={
+                    canWrite
+                      ? `/dashboard/projects/${project.id}/edit`
+                      : "/dashboard/projects"
+                  }
                   className="shrink-0 text-xs text-white/45 hover:text-white/70"
                 >
-                  View
+                  {canWrite ? "Edit" : "View"}
                 </Link>
               </div>
             </li>
@@ -79,16 +91,7 @@ export function ProjectsPanel({
         </ul>
       )}
 
-      {projects.length > 6 ? (
-        <div className="mt-3">
-          <Link
-            href="/dashboard/projects"
-            className="text-xs text-white/45 hover:text-white/70"
-          >
-            View all {projects.length} projects →
-          </Link>
-        </div>
-      ) : projects.length > 0 ? (
+      {activeProjects.length > 0 ? (
         <div className="mt-3">
           <Link
             href="/dashboard/projects"

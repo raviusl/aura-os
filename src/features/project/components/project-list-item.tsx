@@ -11,7 +11,6 @@ import {
   restoreProjectAction,
 } from "@/core/actions/project-actions";
 import type { Project } from "@/core/types";
-import { cn } from "@/lib/utils";
 
 type ProjectListItemProps = {
   workspaceId: string;
@@ -34,18 +33,30 @@ export function ProjectListItem({
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 sm:px-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-white">{project.name}</p>
           <p className="mt-1 truncate text-xs text-white/45">
             {statusLabel(project.status)}
             {project.project_type ? ` · ${project.project_type}` : ""}
-            {project.owner_id ? ` · Owner assigned` : ""}
           </p>
         </div>
         {canWrite ? (
           <div className="flex flex-wrap gap-2">
+            {project.status !== "archived" ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={pending}
+                onClick={() =>
+                  router.push(`/dashboard/projects/${project.id}/edit`)
+                }
+              >
+                Edit
+              </Button>
+            ) : null}
             {project.status === "draft" ? (
               <Button
                 type="button"
@@ -102,7 +113,6 @@ export function ProjectListItem({
                 size="sm"
                 variant="outline"
                 disabled={pending}
-                className={cn(pending && "opacity-60")}
                 onClick={() => {
                   startTransition(async () => {
                     const result = await restoreProjectAction({

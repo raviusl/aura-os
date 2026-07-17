@@ -34,7 +34,7 @@ export function VendorListItem({
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-4 sm:px-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-white">{vendor.name}</p>
@@ -46,6 +46,19 @@ export function VendorListItem({
         </div>
         {canWrite ? (
           <div className="flex flex-wrap gap-2">
+            {vendor.status !== "archived" ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={pending}
+                onClick={() =>
+                  router.push(`/dashboard/vendors/${vendor.id}/edit`)
+                }
+              >
+                Edit
+              </Button>
+            ) : null}
             {vendor.status === "active" ? (
               <Button
                 type="button"

@@ -10,37 +10,35 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createProjectAction } from "@/core/actions/project-actions";
-import { PROJECT_TYPES } from "@/core/types";
+import { updateProjectAction } from "@/core/actions/project-actions";
+import { PROJECT_TYPES, type Project } from "@/core/types";
 import { authFieldClassName } from "@/features/auth/lib/auth-ui";
 
 const formSchema = z.object({
   workspaceId: z.string().uuid(),
   companyId: z.string().uuid(),
+  projectId: z.string().uuid(),
   name: z.string().min(1, "Project name is required").max(160),
   projectType: z.enum(PROJECT_TYPES).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-type CreateProjectFormProps = {
-  workspaceId: string;
-  companyId: string;
+type EditProjectFormProps = {
+  project: Project;
 };
 
-export function CreateProjectForm({
-  workspaceId,
-  companyId,
-}: CreateProjectFormProps) {
+export function EditProjectForm({ project }: EditProjectFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      workspaceId,
-      companyId,
-      name: "",
-      projectType: "other",
+      workspaceId: project.workspace_id,
+      companyId: project.company_id,
+      projectId: project.id,
+      name: project.name,
+      projectType: project.project_type ?? "other",
     },
   });
 
@@ -49,18 +47,19 @@ export function CreateProjectForm({
       className="space-y-4"
       onSubmit={form.handleSubmit((values) => {
         startTransition(async () => {
-          const result = await createProjectAction({
+          const result = await updateProjectAction({
             workspaceId: values.workspaceId,
             companyId: values.companyId,
+            projectId: values.projectId,
             name: values.name,
             projectType: values.projectType,
-            status: "draft",
+            status: project.status === "archived" ? "draft" : project.status,
           });
           if (!result.ok) {
             toast.error(result.error);
             return;
           }
-          toast.success("Project created");
+          toast.success("Project updated");
           router.push("/dashboard/projects");
           router.refresh();
         });
@@ -68,11 +67,12 @@ export function CreateProjectForm({
     >
       <input type="hidden" {...form.register("workspaceId")} />
       <input type="hidden" {...form.register("companyId")} />
+      <input type="hidden" {...form.register("projectId")} />
 
       <div className="space-y-2">
-        <Label htmlFor="project-name">Project name</Label>
+        <Label htmlFor="edit-project-name">Project name</Label>
         <Input
-          id="project-name"
+          id="edit-project-name"
           className={authFieldClassName}
           disabled={pending}
           {...form.register("name")}
@@ -85,9 +85,9 @@ export function CreateProjectForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="project-type">Type</Label>
+        <Label htmlFor="edit-project-type">Type</Label>
         <select
-          id="project-type"
+          id="edit-project-type"
           className="h-8 w-full rounded-lg border border-white/10 bg-white/5 px-2.5 text-sm text-white"
           disabled={pending}
           {...form.register("projectType")}
@@ -105,7 +105,7 @@ export function CreateProjectForm({
         disabled={pending}
         className="bg-white text-black hover:bg-white/90"
       >
-        {pending ? "Creating…" : "Create project"}
+        {pending ? "Saving…" : "Save changes"}
       </Button>
     </form>
   );

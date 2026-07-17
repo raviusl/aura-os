@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 import { requireDashboardContext } from "@/core/auth/context";
 import { listProjectsByCompany } from "@/core/project/project";
 import { ProjectListItem } from "@/features/project/components/project-list-item";
@@ -14,7 +15,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-xl text-white">Projects</h1>
           <p className="mt-2 text-sm text-white/45">
@@ -25,7 +26,7 @@ export default async function ProjectsPage() {
         {canWrite ? (
           <Link
             href="/dashboard/projects/new"
-            className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-black hover:bg-white/90"
+            className="inline-flex w-fit rounded-lg bg-white px-3 py-2 text-sm font-medium text-black hover:bg-white/90"
           >
             Create
           </Link>
@@ -33,10 +34,12 @@ export default async function ProjectsPage() {
       </div>
 
       {projects.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 px-5 py-8 text-sm text-white/45">
-          No projects in this company yet.
-          {canWrite ? " Create one to get started." : ""}
-        </div>
+        <ModuleEmptyState
+          title="No projects yet"
+          description="Create your first project to organize work for this company."
+          actionHref={canWrite ? "/dashboard/projects/new" : undefined}
+          actionLabel={canWrite ? "Create project" : undefined}
+        />
       ) : (
         <ul className="space-y-3">
           {projects.map((project) => (

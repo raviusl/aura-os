@@ -10,13 +10,14 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClientAction } from "@/core/actions/client-actions";
-import { CLIENT_TYPES, type Project } from "@/core/types";
+import { updateClientAction } from "@/core/actions/client-actions";
+import { CLIENT_TYPES, type Client, type Project } from "@/core/types";
 import { authFieldClassName } from "@/features/auth/lib/auth-ui";
 
 const formSchema = z.object({
   workspaceId: z.string().uuid(),
   companyId: z.string().uuid(),
+  clientId: z.string().uuid(),
   projectId: z.string().uuid().optional().or(z.literal("")),
   name: z.string().min(1, "Client name is required").max(160),
   email: z.string().email().optional().or(z.literal("")),
@@ -26,29 +27,25 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type CreateClientFormProps = {
-  workspaceId: string;
-  companyId: string;
+type EditClientFormProps = {
+  client: Client;
   projects: Project[];
 };
 
-export function CreateClientForm({
-  workspaceId,
-  companyId,
-  projects,
-}: CreateClientFormProps) {
+export function EditClientForm({ client, projects }: EditClientFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      workspaceId,
-      companyId,
-      projectId: "",
-      name: "",
-      email: "",
-      phone: "",
-      clientType: "individual",
+      workspaceId: client.workspace_id,
+      companyId: client.company_id,
+      clientId: client.id,
+      projectId: client.project_id ?? "",
+      name: client.name,
+      email: client.email ?? "",
+      phone: client.phone ?? "",
+      clientType: client.client_type ?? "individual",
     },
   });
 
@@ -57,21 +54,22 @@ export function CreateClientForm({
       className="space-y-4"
       onSubmit={form.handleSubmit((values) => {
         startTransition(async () => {
-          const result = await createClientAction({
+          const result = await updateClientAction({
             workspaceId: values.workspaceId,
             companyId: values.companyId,
+            clientId: values.clientId,
             projectId: values.projectId || null,
             name: values.name,
             email: values.email || null,
             phone: values.phone || null,
             clientType: values.clientType,
-            status: "active",
+            status: client.status === "archived" ? "active" : client.status,
           });
           if (!result.ok) {
             toast.error(result.error);
             return;
           }
-          toast.success("Client created");
+          toast.success("Client updated");
           router.push("/dashboard/clients");
           router.refresh();
         });
@@ -79,11 +77,12 @@ export function CreateClientForm({
     >
       <input type="hidden" {...form.register("workspaceId")} />
       <input type="hidden" {...form.register("companyId")} />
+      <input type="hidden" {...form.register("clientId")} />
 
       <div className="space-y-2">
-        <Label htmlFor="client-name">Name</Label>
+        <Label htmlFor="edit-client-name">Name</Label>
         <Input
-          id="client-name"
+          id="edit-client-name"
           className={authFieldClassName}
           disabled={pending}
           {...form.register("name")}
@@ -96,9 +95,9 @@ export function CreateClientForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="client-type">Type</Label>
+        <Label htmlFor="edit-client-type">Type</Label>
         <select
-          id="client-type"
+          id="edit-client-type"
           className="h-8 w-full rounded-lg border border-white/10 bg-white/5 px-2.5 text-sm text-white"
           disabled={pending}
           {...form.register("clientType")}
@@ -115,9 +114,9 @@ export function CreateClientForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="client-email">Email</Label>
+          <Label htmlFor="edit-client-email">Email</Label>
           <Input
-            id="client-email"
+            id="edit-client-email"
             type="email"
             className={authFieldClassName}
             disabled={pending}
@@ -125,9 +124,9 @@ export function CreateClientForm({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="client-phone">Phone</Label>
+          <Label htmlFor="edit-client-phone">Phone</Label>
           <Input
-            id="client-phone"
+            id="edit-client-phone"
             className={authFieldClassName}
             disabled={pending}
             {...form.register("phone")}
@@ -136,9 +135,9 @@ export function CreateClientForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="client-project">Project (optional)</Label>
+        <Label htmlFor="edit-client-project">Project (optional)</Label>
         <select
-          id="client-project"
+          id="edit-client-project"
           className="h-8 w-full rounded-lg border border-white/10 bg-white/5 px-2.5 text-sm text-white"
           disabled={pending}
           {...form.register("projectId")}
@@ -159,7 +158,7 @@ export function CreateClientForm({
         disabled={pending}
         className="bg-white text-black hover:bg-white/90"
       >
-        {pending ? "Creating…" : "Create client"}
+        {pending ? "Saving…" : "Save changes"}
       </Button>
     </form>
   );

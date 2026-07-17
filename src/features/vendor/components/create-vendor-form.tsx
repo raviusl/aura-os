@@ -89,6 +89,11 @@ export function CreateVendorForm({
           disabled={pending}
           {...form.register("name")}
         />
+        {form.formState.errors.name ? (
+          <p className="text-xs text-red-400">
+            {form.formState.errors.name.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-2">

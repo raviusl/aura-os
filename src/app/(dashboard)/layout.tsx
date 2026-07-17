@@ -24,7 +24,7 @@ import { toVendorContextValue } from "@/features/vendor/lib/vendor-context";
 import { WorkspaceSwitcher } from "@/features/workspace/components/workspace-switcher";
 import { getSessionUser } from "@/features/auth/lib/get-session-user";
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import { AiAssistantPanel } from "@/components/layout/ai-assistant-panel";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
 
 export default async function DashboardLayout({
@@ -95,8 +95,9 @@ export default async function DashboardLayout({
                 <AppSidebar />
               </div>
               <div className="flex min-w-0 flex-1 flex-col">
-                <div className="flex h-14 items-center justify-between gap-3 border-b border-white/[0.06] px-6">
+                <div className="flex h-14 items-center justify-between gap-2 border-b border-white/[0.06] px-3 sm:gap-3 sm:px-6">
                   <div className="flex min-w-0 items-center gap-2">
+                    <MobileNav />
                     <WorkspaceSwitcher
                       workspaces={workspaces}
                       activeWorkspace={activeWorkspace}
@@ -105,12 +106,9 @@ export default async function DashboardLayout({
                   </div>
                   <SignOutButton />
                 </div>
-                <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                <main className="flex-1 overflow-y-auto px-3 py-5 sm:px-6 sm:py-6">
                   {children}
                 </main>
-              </div>
-              <div className="hidden xl:block">
-                <AiAssistantPanel />
               </div>
             </div>
           </VendorContextProvider>

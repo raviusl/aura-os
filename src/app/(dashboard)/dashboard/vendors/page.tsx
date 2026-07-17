@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 import { requireDashboardContext } from "@/core/auth/context";
 import { listVendorsByCompany } from "@/core/vendor/vendor";
 import { VendorListItem } from "@/features/vendor/components/vendor-list-item";
@@ -14,7 +15,7 @@ export default async function VendorsPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-xl text-white">Vendors</h1>
           <p className="mt-2 text-sm text-white/45">
@@ -25,7 +26,7 @@ export default async function VendorsPage() {
         {canWrite ? (
           <Link
             href="/dashboard/vendors/new"
-            className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-black hover:bg-white/90"
+            className="inline-flex w-fit rounded-lg bg-white px-3 py-2 text-sm font-medium text-black hover:bg-white/90"
           >
             Create
           </Link>
@@ -33,10 +34,12 @@ export default async function VendorsPage() {
       </div>
 
       {vendors.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 px-5 py-8 text-sm text-white/45">
-          No vendors in this company yet.
-          {canWrite ? " Create one to get started." : ""}
-        </div>
+        <ModuleEmptyState
+          title="No vendors yet"
+          description="Add photographers, venues, caterers, and other vendors."
+          actionHref={canWrite ? "/dashboard/vendors/new" : undefined}
+          actionLabel={canWrite ? "Create vendor" : undefined}
+        />
       ) : (
         <ul className="space-y-3">
           {vendors.map((vendor) => (

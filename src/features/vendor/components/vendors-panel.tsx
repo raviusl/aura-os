@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { Vendor } from "@/core/types";
+import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 import { vendorCategoryLabel } from "@/features/vendor/lib/vendor-context";
 
 type VendorsPanelProps = {
@@ -24,24 +25,29 @@ export function VendorsPanel({
     <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-sm font-medium text-white">Vendors</h2>
-          <p className="mt-1 text-xs text-white/45">
-            Active company: {companyName}
-          </p>
+          <h2 className="text-sm font-medium text-white">
+            Vendors ({visible.length})
+          </h2>
+          <p className="mt-1 text-xs text-white/45">{companyName}</p>
         </div>
         {canWrite ? (
           <Link
             href="/dashboard/vendors/new"
             className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/[0.05]"
           >
-            New vendor
+            New
           </Link>
         ) : null}
       </div>
 
       {visible.length === 0 ? (
-        <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-6 text-sm text-white/45">
-          No vendors in this company yet.
+        <div className="mt-4">
+          <ModuleEmptyState
+            title="No vendors yet"
+            description="Add photographers, venues, caterers, and other vendors for this company."
+            actionHref={canWrite ? "/dashboard/vendors/new" : undefined}
+            actionLabel={canWrite ? "Create vendor" : undefined}
+          />
         </div>
       ) : (
         <ul className="mt-4 space-y-2">
@@ -56,14 +62,17 @@ export function VendorsPanel({
                   <p className="mt-1 text-xs text-white/40">
                     {vendorCategoryLabel(vendor.category)} ·{" "}
                     {statusLabel(vendor.status)}
-                    {vendor.email ? ` · ${vendor.email}` : ""}
                   </p>
                 </div>
                 <Link
-                  href="/dashboard/vendors"
+                  href={
+                    canWrite
+                      ? `/dashboard/vendors/${vendor.id}/edit`
+                      : "/dashboard/vendors"
+                  }
                   className="shrink-0 text-xs text-white/45 hover:text-white/70"
                 >
-                  View
+                  {canWrite ? "Edit" : "View"}
                 </Link>
               </div>
             </li>
@@ -71,15 +80,13 @@ export function VendorsPanel({
         </ul>
       )}
 
-      {vendors.length > 0 ? (
+      {visible.length > 0 ? (
         <div className="mt-3">
           <Link
             href="/dashboard/vendors"
             className="text-xs text-white/45 hover:text-white/70"
           >
-            {vendors.length > 6
-              ? `View all ${vendors.length} vendors →`
-              : "Manage vendors →"}
+            Manage vendors →
           </Link>
         </div>
       ) : null}
