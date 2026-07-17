@@ -9,7 +9,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { acceptCoreInvitationAction } from "@/core/actions/core-actions";
+import {
+  acceptMembershipInvitationAction,
+  rejectMembershipInvitationAction,
+} from "@/core/actions/membership-actions";
 import type { CoreInvitationPreview } from "@/core/auth/invitation-preview";
 import {
   acceptCoreInvitationSchema,
@@ -27,8 +30,7 @@ type AcceptCoreInvitationFormProps = {
 };
 
 /**
- * Auth foundation only — password creation after invitation.
- * Not a business dashboard UI.
+ * Identity foundation — accept or reject workspace membership invitation.
  */
 export function AcceptCoreInvitationForm({
   token,
@@ -48,23 +50,37 @@ export function AcceptCoreInvitationForm({
   return (
     <div className={authCardClassName}>
       <div className="space-y-1">
-        <h1 className="text-lg font-medium text-white">Accept Invitation</h1>
+        <h1 className="text-lg font-medium text-white">
+          {preview.existingAccount ? "Join workspace" : "Accept invitation"}
+        </h1>
         <p className="text-sm text-white/50">
           {preview.fullName} · {preview.email}
         </p>
-        <p className="text-xs text-white/35">Role: {preview.role}</p>
+        <p className="text-xs text-white/35">
+          {preview.workspaceName} · Role: {preview.role}
+        </p>
+        {preview.existingAccount ? (
+          <p className="pt-2 text-xs text-white/45">
+            An account already exists for this email. Enter your password to
+            join this workspace.
+          </p>
+        ) : null}
       </div>
 
       <form
         className="space-y-4"
         onSubmit={form.handleSubmit((values) => {
           startTransition(async () => {
-            const result = await acceptCoreInvitationAction(values);
+            const result = await acceptMembershipInvitationAction(values);
             if (!result.ok) {
               toast.error(result.error);
               return;
             }
-            toast.success("Account created");
+            toast.success(
+              preview.existingAccount
+                ? "Joined workspace"
+                : "Account created",
+            );
             if (result.data.signedIn) {
               window.location.assign("/dashboard");
               return;
@@ -80,10 +96,18 @@ export function AcceptCoreInvitationForm({
           <Input
             id="core-invite-password"
             type="password"
-            autoComplete="new-password"
+            autoComplete={
+              preview.existingAccount ? "current-password" : "new-password"
+            }
             className={authFieldClassName}
+            disabled={pending}
             {...form.register("password")}
           />
+          {form.formState.errors.password ? (
+            <p className="text-xs text-red-400">
+              {form.formState.errors.password.message}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2">
@@ -91,12 +115,15 @@ export function AcceptCoreInvitationForm({
           <Input
             id="core-invite-confirm"
             type="password"
-            autoComplete="new-password"
+            autoComplete={
+              preview.existingAccount ? "current-password" : "new-password"
+            }
             className={authFieldClassName}
+            disabled={pending}
             {...form.register("confirmPassword")}
           />
           {form.formState.errors.confirmPassword ? (
-            <p className="text-xs text-destructive">
+            <p className="text-xs text-red-400">
               {form.formState.errors.confirmPassword.message}
             </p>
           ) : null}
@@ -107,9 +134,33 @@ export function AcceptCoreInvitationForm({
           disabled={pending}
           className={authPrimaryButtonClassName}
         >
-          {pending ? "Creating…" : "Create password & continue"}
+          {pending
+            ? "Working…"
+            : preview.existingAccount
+              ? "Join workspace"
+              : "Create account"}
         </Button>
       </form>
+
+      <Button
+        type="button"
+        variant="ghost"
+        disabled={pending}
+        className="w-full text-white/55 hover:text-white"
+        onClick={() => {
+          startTransition(async () => {
+            const result = await rejectMembershipInvitationAction({ token });
+            if (!result.ok) {
+              toast.error(result.error);
+              return;
+            }
+            toast.success("Invitation rejected");
+            router.replace("/login");
+          });
+        }}
+      >
+        Reject invitation
+      </Button>
     </div>
   );
 }

@@ -86,7 +86,9 @@ function AuthFormInner() {
                   toast.error(error.message);
                   return;
                 }
-                window.location.assign(nextPath);
+                window.location.assign(
+                  nextPath === "/dashboard" ? "/dashboard/enter" : nextPath,
+                );
               } catch (error) {
                 const message =
                   error instanceof Error ? error.message : "Sign in failed";

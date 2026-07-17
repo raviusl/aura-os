@@ -23,6 +23,18 @@ Aura OS does **not** allow public Sign Up.
 
 - `supabase/migrations/20260717020000_sprint009_core_foundation.sql`
 
+7. Run Sprint 010 Workspace Management migration:
+
+- `supabase/migrations/20260717030000_sprint010_workspace_management.sql`
+
+8. Run Sprint 011 Identity & Membership migration:
+
+- `supabase/migrations/20260717040000_sprint011_identity_membership.sql`
+
+9. Run Sprint 012 Workspace Foundation migration:
+
+- `supabase/migrations/20260717050000_sprint012_workspace_foundation.sql`
+
 Bootstrap Super Admins via `SUPER_ADMIN_EMAILS` in `.env.local`.  
 Set `NEXT_PUBLIC_APP_URL` to the public origin used in invite emails.  
 Configure `RESEND_API_KEY` to send invitation emails (optional for local; invite URL is shown if unset).

@@ -364,6 +364,10 @@ export type Database = {
           timezone: string;
           locale: string;
           currency: string;
+          country: string | null;
+          logo_url: string | null;
+          owner_id: string | null;
+          custom_domain: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -375,6 +379,10 @@ export type Database = {
           timezone?: string;
           locale?: string;
           currency?: string;
+          country?: string | null;
+          logo_url?: string | null;
+          owner_id?: string | null;
+          custom_domain?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -386,6 +394,10 @@ export type Database = {
           timezone?: string;
           locale?: string;
           currency?: string;
+          country?: string | null;
+          logo_url?: string | null;
+          owner_id?: string | null;
+          custom_domain?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -398,6 +410,8 @@ export type Database = {
           name: string;
           slug: string;
           status: string;
+          type: string | null;
+          logo_url: string | null;
           country: string | null;
           timezone: string | null;
           locale: string | null;
@@ -411,6 +425,8 @@ export type Database = {
           name: string;
           slug: string;
           status?: string;
+          type?: string | null;
+          logo_url?: string | null;
           country?: string | null;
           timezone?: string | null;
           locale?: string | null;
@@ -424,6 +440,8 @@ export type Database = {
           name?: string;
           slug?: string;
           status?: string;
+          type?: string | null;
+          logo_url?: string | null;
           country?: string | null;
           timezone?: string | null;
           locale?: string | null;
@@ -526,6 +544,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      memberships: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          workspace_id: string;
+          company_id: string;
+          role_key: string;
+          email: string;
+          full_name: string;
+          status: string;
+          person_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          workspace_id: string;
+          company_id: string;
+          role_key: string;
+          email: string;
+          full_name: string;
+          status?: string;
+          person_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          workspace_id?: string;
+          company_id?: string;
+          role_key?: string;
+          email?: string;
+          full_name?: string;
+          status?: string;
+          person_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       person_roles: {
         Row: {
           id: string;
@@ -595,6 +655,8 @@ export type Database = {
           expires_at: string;
           accepted_at: string | null;
           accepted_user_id: string | null;
+          rejected_at: string | null;
+          rejected_by_user_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -612,6 +674,8 @@ export type Database = {
           expires_at: string;
           accepted_at?: string | null;
           accepted_user_id?: string | null;
+          rejected_at?: string | null;
+          rejected_by_user_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -629,6 +693,8 @@ export type Database = {
           expires_at?: string;
           accepted_at?: string | null;
           accepted_user_id?: string | null;
+          rejected_at?: string | null;
+          rejected_by_user_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };

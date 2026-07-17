@@ -266,7 +266,8 @@ create trigger core_invitations_set_updated_at
   for each row execute function public.set_updated_at();
 
 -- ---------------------------------------------------------------------------
--- RLS: service role for foundation writes; authenticated read via policies later
+-- RLS: enabled, no tenant policies yet (deny-by-default + service_role only).
+-- See docs/SECURITY.md — why deferred, when to introduce, migration strategy.
 -- ---------------------------------------------------------------------------
 alter table public.workspaces enable row level security;
 alter table public.companies enable row level security;

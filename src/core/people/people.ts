@@ -7,11 +7,22 @@ import {
   createPersonSchema,
   type CreatePersonInput,
 } from "@/core/schemas";
-import type { CoreRole, Person, PersonRole } from "@/core/types";
+import type {
+  CoreRole,
+  MembershipStatus,
+  Person,
+  PersonRole,
+} from "@/core/types";
 import { getWorkspaceById } from "@/core/workspace/workspace";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export type { CreatePersonInput };
+
+const ACTIVE_MEMBERSHIP: MembershipStatus = "accepted";
+
+export function isAcceptedMembership(person: Person): boolean {
+  return person.status === ACTIVE_MEMBERSHIP;
+}
 
 export async function createPerson(
   input: CreatePersonInput,
@@ -40,7 +51,9 @@ export async function createPerson(
       user_id: values.userId ?? null,
       email,
       full_name: values.fullName.trim(),
-      status: values.status ?? (values.userId ? "active" : "invited"),
+      status:
+        values.status ??
+        (values.userId ? ACTIVE_MEMBERSHIP : ("pending" satisfies MembershipStatus)),
     })
     .select("*")
     .single();
@@ -79,17 +92,46 @@ export async function assignRole(
     throw new CoreError("ROLE_ASSIGN_FAILED", "Failed to assign role.");
   }
 
+  return listRolesForPerson(personId);
+}
+
+export async function listRolesForPerson(
+  personId: string,
+): Promise<PersonRole[]> {
+  const admin = createAdminClient();
   const { data, error } = await admin
     .from("person_roles")
     .select("*")
     .eq("person_id", personId);
 
   if (error) {
-    console.error("assignRole list failed", error.message);
+    console.error("listRolesForPerson failed", error.message);
     throw new CoreError("ROLE_LIST_FAILED", "Failed to load person roles.");
   }
 
   return (data ?? []) as PersonRole[];
+}
+
+/**
+ * Replace membership roles with a single membership role key.
+ * Legacy specialized roles on the same person are cleared.
+ */
+export async function replaceMembershipRole(
+  personId: string,
+  roleKey: CoreRole | string,
+): Promise<PersonRole[]> {
+  const admin = createAdminClient();
+  const { error: deleteError } = await admin
+    .from("person_roles")
+    .delete()
+    .eq("person_id", personId);
+
+  if (deleteError) {
+    console.error("replaceMembershipRole delete failed", deleteError.message);
+    throw new CoreError("ROLE_ASSIGN_FAILED", "Failed to update membership role.");
+  }
+
+  return assignRole(personId, roleKey);
 }
 
 export async function getPersonByUserAndWorkspace(
@@ -149,13 +191,36 @@ export async function listPeopleByWorkspace(
   return (data ?? []) as Person[];
 }
 
+export async function updatePersonStatus(
+  personId: string,
+  status: MembershipStatus,
+): Promise<Person> {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("people")
+    .update({ status })
+    .eq("id", personId)
+    .select("*")
+    .single();
+
+  if (error || !data) {
+    console.error("updatePersonStatus failed", error?.message);
+    throw new CoreError(
+      "MEMBERSHIP_UPDATE_FAILED",
+      "Failed to update membership status.",
+    );
+  }
+
+  return data as Person;
+}
+
 export async function requirePersonPermission(
   userId: string,
   workspaceId: string,
   permission: string,
 ): Promise<Person> {
   const person = await getPersonByUserAndWorkspace(userId, workspaceId);
-  if (!person || person.status !== "active") {
+  if (!person || !isAcceptedMembership(person)) {
     throw new CoreError(
       "PERMISSION_DENIED",
       "You do not have access to this workspace.",

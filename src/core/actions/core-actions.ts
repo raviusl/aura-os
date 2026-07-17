@@ -16,30 +16,13 @@ import type {
   CreateCompanyInput,
   CreatePersonInput,
   CreateProjectInput,
-  CreateWorkspaceInput,
   InvitePersonInput,
 } from "@/core/schemas";
 import type { CoreRole } from "@/core/types";
-import { createWorkspace } from "@/core/workspace/workspace";
 
 export type CoreActionResult<T = undefined> =
   | { ok: true; data: T }
   | { ok: false; error: string };
-
-export async function createWorkspaceAction(
-  input: CreateWorkspaceInput,
-): Promise<CoreActionResult<{ workspaceId: string }>> {
-  try {
-    await requireSessionUserId();
-    const workspace = await createWorkspace(input);
-    return { ok: true, data: { workspaceId: workspace.id } };
-  } catch (error) {
-    return {
-      ok: false,
-      error: toCoreUserMessage(error, "Failed to create workspace"),
-    };
-  }
-}
 
 export async function createCompanyAction(
   input: CreateCompanyInput,
@@ -82,12 +65,21 @@ export async function assignRoleAction(input: {
 }): Promise<CoreActionResult> {
   try {
     const userId = await requireSessionUserId();
-    const { requirePersonPermission } = await import("@/core/people/people");
+    const { requirePersonPermission, getPersonById } = await import(
+      "@/core/people/people"
+    );
     await requirePersonPermission(
       userId,
       input.workspaceId,
       "people.assign_role",
     );
+    const person = await getPersonById(input.personId);
+    if (person.workspace_id !== input.workspaceId) {
+      return {
+        ok: false,
+        error: "Person does not belong to this workspace.",
+      };
+    }
     await assignRole(input.personId, input.role);
     return { ok: true, data: undefined };
   } catch (error) {

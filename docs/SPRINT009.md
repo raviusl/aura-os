@@ -1,6 +1,6 @@
 # Sprint 009 — Core Foundation
 
-**Status:** Implemented (awaiting CTO review)  
+**Status:** Approved  
 **Product:** RIVA  
 **Constraint:** No business modules · No Client Portal · No AI · No Dashboard UI rebuild
 
@@ -44,6 +44,7 @@ Every core object belongs to exactly one **Workspace**.
 | Server actions | `src/core/actions/core-actions.ts` |
 | Types | `src/core/types.ts` + `src/types/database.ts` |
 | Core invite accept | `/invite/accept?source=core&token=…` |
+| Security / RLS deferral | [SECURITY.md](./SECURITY.md) |
 
 ---
 
@@ -80,6 +81,7 @@ Future roles can be added without forking architecture.
 - AI  
 - Dashboard UI redesign  
 - Business workflow logic on Project  
+- Tenant-scoped RLS policies (RLS is **enabled**; policies deferred — see [SECURITY.md](./SECURITY.md))
 
 ---
 
@@ -93,4 +95,4 @@ Run in Supabase SQL Editor:
 
 ## 8. Next
 
-Wait for **CTO review**. Do not start Sprint 010.
+Foundation approved. Continue with Sprint 010 — Workspace Management.

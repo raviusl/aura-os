@@ -20,6 +20,36 @@ export default async function SettingsPage() {
       </div>
 
       <div className="space-y-3">
+        <Link
+          href="/dashboard/settings/workspace"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Workspace</p>
+          <p className="mt-1 text-xs text-white/45">
+            Name, logo, timezone, country, currency, locale, and status.
+          </p>
+        </Link>
+
+        <Link
+          href="/dashboard/settings/members"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Members</p>
+          <p className="mt-1 text-xs text-white/45">
+            Invite people, manage roles, and membership status.
+          </p>
+        </Link>
+
+        <Link
+          href="/dashboard/workspaces"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Workspaces</p>
+          <p className="mt-1 text-xs text-white/45">
+            List, create, and switch between workspaces you belong to.
+          </p>
+        </Link>
+
         {isSuperAdmin ? (
           <Link
             href="/dashboard/settings/users"

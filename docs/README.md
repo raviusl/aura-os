@@ -40,9 +40,13 @@ Earlier Aura OS sprint docs remain for reference only. Where they conflict with 
 - **Architecture Phase** — approved under `/docs/architecture`
 - **Sprint 008 Blueprint** — documentation approved under `/docs/sprint-008`
 - **CTO Technical Blueprint** — drafted under `/docs/technical-blueprint`
-- **Sprint 009 Core Foundation** — implemented (`docs/SPRINT009.md`) — awaiting CTO review
+- **Sprint 009 Core Foundation** — approved (`docs/SPRINT009.md`)
+- **Sprint 010 Workspace Management** — approved (`docs/SPRINT010.md`)
+- **Sprint 011 Identity & Membership** — implemented (`docs/SPRINT011.md`)
+- **Sprint 012 Workspace Foundation** — implemented (`docs/SPRINT012.md`)
+- **Security / RLS strategy** — [SECURITY.md](./SECURITY.md) (RLS enabled; tenant policies deferred by design)
 - **Prototype V0** — archived UI remains; do not extend business modules
-- **Next** — CTO review of Sprint 009 (do not start Sprint 010)
+- **Next** — Company management UI · dashboard tenancy scoping
 
 ## Related project docs
 

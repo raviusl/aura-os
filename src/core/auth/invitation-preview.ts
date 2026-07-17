@@ -1,8 +1,10 @@
 import "server-only";
 
+import { authUserExistsByEmail } from "@/core/auth/auth-user-exists";
 import { CoreError } from "@/core/errors";
 import { hashCoreInvitationToken } from "@/core/lib/invitation-token";
 import type { CoreInvitation } from "@/core/types";
+import { getWorkspaceById } from "@/core/workspace/workspace";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export type CoreInvitationPreview = {
@@ -10,7 +12,10 @@ export type CoreInvitationPreview = {
   fullName: string;
   role: string;
   workspaceId: string;
+  workspaceName: string;
   expiresAt: string;
+  /** True when an Auth account already exists for this email (join flow). */
+  existingAccount: boolean;
 };
 
 export async function getCoreInvitationPreview(
@@ -53,18 +58,36 @@ export async function getCoreInvitationPreview(
       "This invitation has been revoked.",
     );
   }
+  if (invitation.status === "rejected") {
+    throw new CoreError(
+      "INVITATION_REJECTED",
+      "This invitation was rejected.",
+    );
+  }
   if (
     invitation.status === "expired" ||
     new Date(invitation.expires_at).getTime() <= Date.now()
   ) {
+    if (invitation.status === "pending") {
+      await admin
+        .from("core_invitations")
+        .update({ status: "expired" })
+        .eq("id", invitation.id)
+        .eq("status", "pending");
+    }
     throw new CoreError("INVITATION_EXPIRED", "This invitation has expired.");
   }
+
+  const workspace = await getWorkspaceById(invitation.workspace_id);
+  const existingAccount = await authUserExistsByEmail(invitation.email);
 
   return {
     email: invitation.email,
     fullName: invitation.full_name,
     role: invitation.role_key,
     workspaceId: invitation.workspace_id,
+    workspaceName: workspace.name,
     expiresAt: invitation.expires_at,
+    existingAccount,
   };
 }

@@ -1,10 +1,9 @@
 /**
- * RIVA Sprint 009 — Core Foundation types
- * Workspace (root) → Company → People / Projects
+ * RIVA core types — Sprint 012 Workspace Foundation
  */
 
 export const WORKSPACE_STATUSES = [
-  "provisioning",
+  "pending",
   "active",
   "suspended",
   "archived",
@@ -14,13 +13,27 @@ export type WorkspaceStatus = (typeof WORKSPACE_STATUSES)[number];
 export const COMPANY_STATUSES = ["active", "suspended", "archived"] as const;
 export type CompanyStatus = (typeof COMPANY_STATUSES)[number];
 
-export const PERSON_STATUSES = [
-  "invited",
-  "active",
-  "disabled",
-  "archived",
+export const COMPANY_TYPES = [
+  "agency",
+  "brand",
+  "venue",
+  "corporate",
+  "wedding",
+  "other",
 ] as const;
-export type PersonStatus = (typeof PERSON_STATUSES)[number];
+export type CompanyType = (typeof COMPANY_TYPES)[number];
+
+export const MEMBERSHIP_STATUSES = [
+  "pending",
+  "accepted",
+  "suspended",
+  "removed",
+] as const;
+export type MembershipStatus = (typeof MEMBERSHIP_STATUSES)[number];
+
+/** @deprecated Prefer MembershipStatus */
+export const PERSON_STATUSES = MEMBERSHIP_STATUSES;
+export type PersonStatus = MembershipStatus;
 
 export const PROJECT_STATUSES = ["draft", "active", "archived"] as const;
 export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
@@ -35,11 +48,28 @@ export const PROJECT_TYPES = [
 ] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
-export const CORE_ROLES = [
-  "owner",
+/** Sprint 012 workspace membership roles (Product Blueprint). */
+export const MEMBERSHIP_ROLES = [
+  "founder",
   "admin",
   "planner",
   "coordinator",
+  "sales",
+  "viewer",
+] as const;
+export type MembershipRole = (typeof MEMBERSHIP_ROLES)[number];
+
+/** Full role catalog including legacy keys for RBAC compatibility. */
+export const CORE_ROLES = [
+  "founder",
+  "admin",
+  "planner",
+  "coordinator",
+  "sales",
+  "viewer",
+  "owner",
+  "member",
+  "guest",
   "finance",
   "vendor",
   "client",
@@ -66,6 +96,7 @@ export const INVITATION_STATUSES = [
   "accepted",
   "expired",
   "revoked",
+  "rejected",
 ] as const;
 export type CoreInvitationStatus = (typeof INVITATION_STATUSES)[number];
 
@@ -77,6 +108,10 @@ export type Workspace = {
   timezone: string;
   locale: string;
   currency: string;
+  country: string | null;
+  logo_url: string | null;
+  custom_domain: string | null;
+  owner_id: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -87,6 +122,8 @@ export type Company = {
   name: string;
   slug: string;
   status: CompanyStatus;
+  type: CompanyType | null;
+  logo_url: string | null;
   country: string | null;
   timezone: string | null;
   locale: string | null;
@@ -95,6 +132,22 @@ export type Company = {
   updated_at: string;
 };
 
+/** Canonical membership: User ↔ Workspace ↔ Company ↔ Role */
+export type Membership = {
+  id: string;
+  user_id: string | null;
+  workspace_id: string;
+  company_id: string;
+  role_key: MembershipRole | CoreRole | string;
+  email: string;
+  full_name: string;
+  status: MembershipStatus;
+  person_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** Person row (legacy invite path; linked via membership.person_id). */
 export type Person = {
   id: string;
   workspace_id: string;
@@ -102,7 +155,7 @@ export type Person = {
   user_id: string | null;
   email: string;
   full_name: string;
-  status: PersonStatus;
+  status: MembershipStatus;
   created_at: string;
   updated_at: string;
 };
@@ -112,6 +165,10 @@ export type PersonRole = {
   person_id: string;
   role_key: CoreRole | string;
   created_at: string;
+};
+
+export type WorkspaceMember = Person & {
+  roles: string[];
 };
 
 export type Project = {
@@ -139,13 +196,25 @@ export type CoreInvitation = {
   expires_at: string;
   accepted_at: string | null;
   accepted_user_id: string | null;
+  rejected_at: string | null;
+  rejected_by_user_id: string | null;
   created_at: string;
   updated_at: string;
 };
 
 export type WorkspaceContext = {
   workspaceId: string;
-  companyId?: string | null;
+  companyId: string;
+  membershipId: string;
   personId?: string | null;
   userId: string;
+  roleKey: string;
+};
+
+export type SessionContext = {
+  userId: string;
+  workspace: Workspace;
+  company: Company;
+  membership: Membership;
+  permissions: Set<string>;
 };
