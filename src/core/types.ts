@@ -178,6 +178,7 @@ export type Project = {
   name: string;
   project_type: ProjectType | null;
   status: ProjectStatus;
+  owner_id: string | null;
   created_at: string;
   updated_at: string;
 };

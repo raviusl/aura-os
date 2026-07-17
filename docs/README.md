@@ -45,9 +45,10 @@ Earlier Aura OS sprint docs remain for reference only. Where they conflict with 
 - **Sprint 011 Identity & Membership** — implemented (`docs/SPRINT011.md`)
 - **Sprint 012 Workspace Foundation** — implemented (`docs/SPRINT012.md`)
 - **Sprint 013 Company Domain** — implemented (`docs/SPRINT013.md`)
+- **Sprint 014 Project Domain** — implemented (`docs/SPRINT014.md`)
 - **Security / RLS strategy** — [SECURITY.md](./SECURITY.md) (RLS enabled; tenant policies deferred by design)
 - **Prototype V0** — archived UI remains; do not extend business modules
-- **Next** — Dashboard tenancy scoping · navigation shell (Sprint 014)
+- **Next** — Navigation shell (Sprint 015)
 
 ## Related project docs
 

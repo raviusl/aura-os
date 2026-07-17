@@ -38,6 +38,14 @@ export {
 } from "@/core/company/company";
 
 export {
+  createProject,
+  getProjectById,
+  listProjectsByCompany,
+  listProjectsByWorkspace,
+  updateProject,
+} from "@/core/project/project";
+
+export {
   CORE_PERMISSIONS,
   CORE_ROLES,
   COMPANY_STATUSES,

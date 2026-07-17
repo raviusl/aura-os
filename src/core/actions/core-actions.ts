@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import {
   acceptCoreInvitation,
   invitePerson,
@@ -9,11 +7,9 @@ import {
 import { requireSessionUserId } from "@/core/auth/session";
 import { toCoreUserMessage } from "@/core/errors";
 import { assignRole, createPerson } from "@/core/people/people";
-import { createProject } from "@/core/project/project";
 import type {
   AcceptCoreInvitationInput,
   CreatePersonInput,
-  CreateProjectInput,
   InvitePersonInput,
 } from "@/core/schemas";
 import type { CoreRole } from "@/core/types";
@@ -107,24 +103,6 @@ export async function acceptCoreInvitationAction(
     return {
       ok: false,
       error: toCoreUserMessage(error, "Failed to accept invitation"),
-    };
-  }
-}
-
-export async function createProjectAction(
-  input: CreateProjectInput,
-): Promise<CoreActionResult<{ projectId: string }>> {
-  try {
-    const userId = await requireSessionUserId();
-    const { requirePersonPermission } = await import("@/core/people/people");
-    await requirePersonPermission(userId, input.workspaceId, "project.write");
-    const project = await createProject(input);
-    revalidatePath("/dashboard");
-    return { ok: true, data: { projectId: project.id } };
-  } catch (error) {
-    return {
-      ok: false,
-      error: toCoreUserMessage(error, "Failed to create project"),
     };
   }
 }

@@ -1,0 +1,103 @@
+import Link from "next/link";
+
+import type { Project } from "@/core/types";
+
+type ProjectsPanelProps = {
+  projects: Project[];
+  companyName: string;
+  canWrite: boolean;
+};
+
+function statusLabel(status: Project["status"]) {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export function ProjectsPanel({
+  projects,
+  companyName,
+  canWrite,
+}: ProjectsPanelProps) {
+  const activeProjects = projects.filter((project) => project.status !== "archived");
+
+  return (
+    <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-sm font-medium text-white">Projects</h2>
+          <p className="mt-1 text-xs text-white/45">
+            Active company: {companyName}
+          </p>
+        </div>
+        {canWrite ? (
+          <Link
+            href="/dashboard/projects/new"
+            className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/[0.05]"
+          >
+            New project
+          </Link>
+        ) : null}
+      </div>
+
+      {activeProjects.length === 0 ? (
+        <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-6 text-sm text-white/45">
+          No projects in this company yet.
+        </div>
+      ) : (
+        <ul className="mt-4 space-y-2">
+          {activeProjects.slice(0, 6).map((project) => (
+            <li
+              key={project.id}
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm text-white">{project.name}</p>
+                  <p className="mt-1 text-xs text-white/40">
+                    {statusLabel(project.status)}
+                    {project.project_type ? ` · ${project.project_type}` : ""}
+                    {" · Updated "}
+                    {formatDate(project.updated_at)}
+                  </p>
+                </div>
+                <Link
+                  href="/dashboard/projects"
+                  className="shrink-0 text-xs text-white/45 hover:text-white/70"
+                >
+                  View
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {projects.length > 6 ? (
+        <div className="mt-3">
+          <Link
+            href="/dashboard/projects"
+            className="text-xs text-white/45 hover:text-white/70"
+          >
+            View all {projects.length} projects →
+          </Link>
+        </div>
+      ) : projects.length > 0 ? (
+        <div className="mt-3">
+          <Link
+            href="/dashboard/projects"
+            className="text-xs text-white/45 hover:text-white/70"
+          >
+            Manage projects →
+          </Link>
+        </div>
+      ) : null}
+    </section>
+  );
+}

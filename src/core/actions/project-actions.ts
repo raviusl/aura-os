@@ -1,0 +1,129 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+import { requireSessionUserId } from "@/core/auth/session";
+import { toCoreUserMessage } from "@/core/errors";
+import { requireMembershipPermission } from "@/core/membership/memberships";
+import {
+  activateProject,
+  archiveProject,
+  createProject,
+  restoreProject,
+  updateProject,
+} from "@/core/project/project";
+import type {
+  CreateProjectInput,
+  ProjectIdInput,
+  UpdateProjectInput,
+} from "@/core/schemas";
+
+export type ProjectActionResult<T = undefined> =
+  | { ok: true; data: T }
+  | { ok: false; error: string };
+
+function revalidateProjectPaths() {
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/projects");
+}
+
+async function requireProjectWrite(
+  userId: string,
+  workspaceId: string,
+  companyId: string,
+) {
+  await requireMembershipPermission(
+    userId,
+    workspaceId,
+    companyId,
+    "project.write",
+  );
+}
+
+export async function createProjectAction(
+  input: CreateProjectInput,
+): Promise<ProjectActionResult<{ projectId: string }>> {
+  try {
+    const userId = await requireSessionUserId();
+    await requireProjectWrite(userId, input.workspaceId, input.companyId);
+    const project = await createProject({
+      ...input,
+      ownerId: input.ownerId ?? userId,
+    });
+    revalidateProjectPaths();
+    return { ok: true, data: { projectId: project.id } };
+  } catch (error) {
+    return {
+      ok: false,
+      error: toCoreUserMessage(error, "Failed to create project"),
+    };
+  }
+}
+
+export async function updateProjectAction(
+  input: UpdateProjectInput,
+): Promise<ProjectActionResult<{ projectId: string }>> {
+  try {
+    const userId = await requireSessionUserId();
+    await requireProjectWrite(userId, input.workspaceId, input.companyId);
+    const project = await updateProject(input);
+    revalidateProjectPaths();
+    return { ok: true, data: { projectId: project.id } };
+  } catch (error) {
+    return {
+      ok: false,
+      error: toCoreUserMessage(error, "Failed to update project"),
+    };
+  }
+}
+
+export async function archiveProjectAction(
+  input: ProjectIdInput,
+): Promise<ProjectActionResult<{ projectId: string }>> {
+  try {
+    const userId = await requireSessionUserId();
+    await requireProjectWrite(userId, input.workspaceId, input.companyId);
+    const project = await archiveProject(input);
+    revalidateProjectPaths();
+    return { ok: true, data: { projectId: project.id } };
+  } catch (error) {
+    return {
+      ok: false,
+      error: toCoreUserMessage(error, "Failed to archive project"),
+    };
+  }
+}
+
+export async function restoreProjectAction(
+  input: ProjectIdInput,
+): Promise<ProjectActionResult<{ projectId: string }>> {
+  try {
+    const userId = await requireSessionUserId();
+    await requireProjectWrite(userId, input.workspaceId, input.companyId);
+    const project = await restoreProject(input);
+    revalidateProjectPaths();
+    return { ok: true, data: { projectId: project.id } };
+  } catch (error) {
+    return {
+      ok: false,
+      error: toCoreUserMessage(error, "Failed to restore project"),
+    };
+  }
+}
+
+export async function activateProjectAction(
+  input: ProjectIdInput,
+): Promise<ProjectActionResult<{ projectId: string }>> {
+  try {
+    const userId = await requireSessionUserId();
+    await requireProjectWrite(userId, input.workspaceId, input.companyId);
+    const project = await activateProject(input);
+    revalidateProjectPaths();
+    return { ok: true, data: { projectId: project.id } };
+  } catch (error) {
+    return {
+      ok: false,
+      error: toCoreUserMessage(error, "Failed to activate project"),
+    };
+  }
+}

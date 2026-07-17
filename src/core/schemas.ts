@@ -138,9 +138,30 @@ export const createProjectSchema = z.object({
   name: z.string().min(1).max(160),
   projectType: z.enum(PROJECT_TYPES).nullable().optional(),
   status: z.enum(["draft", "active", "archived"]).optional(),
+  ownerId: z.string().uuid().nullable().optional(),
 });
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+
+export const updateProjectSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  projectId: z.string().uuid(),
+  name: z.string().min(1).max(160),
+  projectType: z.enum(PROJECT_TYPES).nullable().optional(),
+  status: z.enum(["draft", "active", "archived"]).optional(),
+  ownerId: z.string().uuid().nullable().optional(),
+});
+
+export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+
+export const projectIdSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  projectId: z.string().uuid(),
+});
+
+export type ProjectIdInput = z.infer<typeof projectIdSchema>;
 
 export const invitePersonSchema = z.object({
   workspaceId: z.string().uuid(),

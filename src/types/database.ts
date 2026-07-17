@@ -615,6 +615,7 @@ export type Database = {
           name: string;
           project_type: string | null;
           status: string;
+          owner_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -625,6 +626,7 @@ export type Database = {
           name: string;
           project_type?: string | null;
           status?: string;
+          owner_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -635,6 +637,7 @@ export type Database = {
           name?: string;
           project_type?: string | null;
           status?: string;
+          owner_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };

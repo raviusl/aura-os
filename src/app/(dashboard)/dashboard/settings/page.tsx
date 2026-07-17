@@ -21,6 +21,16 @@ export default async function SettingsPage() {
 
       <div className="space-y-3">
         <Link
+          href="/dashboard/projects"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Projects</p>
+          <p className="mt-1 text-xs text-white/45">
+            Create and manage projects scoped to the active company.
+          </p>
+        </Link>
+
+        <Link
           href="/dashboard/settings/company"
           className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
         >
