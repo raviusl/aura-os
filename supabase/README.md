@@ -39,6 +39,10 @@ Aura OS does **not** allow public Sign Up.
 
 - `supabase/migrations/20260717060000_sprint014_project_domain.sql`
 
+11. Run Sprint 015 Client Domain migration:
+
+- `supabase/migrations/20260717070000_sprint015_client_domain.sql`
+
 Bootstrap Super Admins via `SUPER_ADMIN_EMAILS` in `.env.local`.  
 Set `NEXT_PUBLIC_APP_URL` to the public origin used in invite emails.  
 Configure `RESEND_API_KEY` to send invitation emails (optional for local; invite URL is shown if unset).

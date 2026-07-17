@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import {
+  CLIENT_STATUSES,
+  CLIENT_TYPES,
   COMPANY_TYPES,
   CORE_ROLES,
   MEMBERSHIP_ROLES,
@@ -162,6 +164,53 @@ export const projectIdSchema = z.object({
 });
 
 export type ProjectIdInput = z.infer<typeof projectIdSchema>;
+
+export const createClientSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  projectId: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(160),
+  email: z.string().email().optional().nullable(),
+  phone: z.string().max(40).optional().nullable(),
+  clientType: z.enum(CLIENT_TYPES).nullable().optional(),
+  status: z.enum(CLIENT_STATUSES).optional(),
+  followUpAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Follow-up date must be YYYY-MM-DD")
+    .optional()
+    .nullable(),
+  notes: z.string().max(4000).optional().nullable(),
+});
+
+export type CreateClientInput = z.infer<typeof createClientSchema>;
+
+export const updateClientSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  clientId: z.string().uuid(),
+  projectId: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(160),
+  email: z.string().email().optional().nullable(),
+  phone: z.string().max(40).optional().nullable(),
+  clientType: z.enum(CLIENT_TYPES).nullable().optional(),
+  status: z.enum(CLIENT_STATUSES).optional(),
+  followUpAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Follow-up date must be YYYY-MM-DD")
+    .optional()
+    .nullable(),
+  notes: z.string().max(4000).optional().nullable(),
+});
+
+export type UpdateClientInput = z.infer<typeof updateClientSchema>;
+
+export const clientIdSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  clientId: z.string().uuid(),
+});
+
+export type ClientIdInput = z.infer<typeof clientIdSchema>;
 
 export const invitePersonSchema = z.object({
   workspaceId: z.string().uuid(),

@@ -48,6 +48,18 @@ export const PROJECT_TYPES = [
 ] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
+/** Sprint 015 client types (Product Blueprint). */
+export const CLIENT_TYPES = [
+  "bride",
+  "groom",
+  "corporate",
+  "individual",
+] as const;
+export type ClientType = (typeof CLIENT_TYPES)[number];
+
+export const CLIENT_STATUSES = ["active", "follow_up", "archived"] as const;
+export type ClientStatus = (typeof CLIENT_STATUSES)[number];
+
 /** Sprint 012 workspace membership roles (Product Blueprint). */
 export const MEMBERSHIP_ROLES = [
   "founder",
@@ -87,6 +99,8 @@ export const CORE_PERMISSIONS = [
   "people.assign_role",
   "project.read",
   "project.write",
+  "client.read",
+  "client.write",
   "permission.manage",
 ] as const;
 export type CorePermission = (typeof CORE_PERMISSIONS)[number];
@@ -179,6 +193,23 @@ export type Project = {
   project_type: ProjectType | null;
   status: ProjectStatus;
   owner_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** Core CRM client (table: crm_clients). Linked to Company + optional Project. */
+export type Client = {
+  id: string;
+  workspace_id: string;
+  company_id: string;
+  project_id: string | null;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  client_type: ClientType | null;
+  status: ClientStatus;
+  follow_up_at: string | null;
+  notes: string | null;
   created_at: string;
   updated_at: string;
 };

@@ -14,12 +14,12 @@ export const navItems = [
     },
   },
   {
-    href: "/dashboard/crm",
+    href: "/dashboard/clients",
     icon: "users",
     emoji: "👥",
     label: {
-      zh: "客户管理",
-      en: "Customer Relationship Management (CRM)",
+      zh: "客户",
+      en: "Clients",
     },
   },
   {

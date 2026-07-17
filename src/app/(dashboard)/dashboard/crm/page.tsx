@@ -1,12 +1,5 @@
-import { FeaturePlaceholder } from "@/components/layout/feature-placeholder";
+import { redirect } from "next/navigation";
 
-export default function CrmPage() {
-  return (
-    <FeaturePlaceholder
-      title={{
-        zh: "客户管理",
-        en: "Customer Relationship Management (CRM)",
-      }}
-    />
-  );
+export default function CrmRedirectPage() {
+  redirect("/dashboard/clients");
 }

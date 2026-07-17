@@ -643,6 +643,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      crm_clients: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          company_id: string;
+          project_id: string | null;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          client_type: string | null;
+          status: string;
+          follow_up_at: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          company_id: string;
+          project_id?: string | null;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          client_type?: string | null;
+          status?: string;
+          follow_up_at?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          workspace_id?: string;
+          company_id?: string;
+          project_id?: string | null;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          client_type?: string | null;
+          status?: string;
+          follow_up_at?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       core_invitations: {
         Row: {
           id: string;

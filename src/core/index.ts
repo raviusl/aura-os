@@ -1,4 +1,7 @@
 export type {
+  Client,
+  ClientStatus,
+  ClientType,
   Company,
   CompanyStatus,
   CompanyType,
@@ -38,6 +41,14 @@ export {
 } from "@/core/company/company";
 
 export {
+  createClient,
+  getClientById,
+  listClientsByCompany,
+  listClientsByProject,
+  updateClient,
+} from "@/core/client/client";
+
+export {
   createProject,
   getProjectById,
   listProjectsByCompany,
@@ -48,6 +59,8 @@ export {
 export {
   CORE_PERMISSIONS,
   CORE_ROLES,
+  CLIENT_STATUSES,
+  CLIENT_TYPES,
   COMPANY_STATUSES,
   COMPANY_TYPES,
   MEMBERSHIP_ROLES,
