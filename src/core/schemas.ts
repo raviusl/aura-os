@@ -97,6 +97,29 @@ export const createCompanySchema = z.object({
 
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 
+export const updateCompanySettingsSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  name: z.string().min(1, "Company name is required").max(160),
+  type: z.enum(COMPANY_TYPES).optional().nullable(),
+  logoUrl: logoUrlSchema,
+  country: countrySchema,
+  timezone: z.string().min(1).max(64).optional().nullable(),
+  locale: z.string().min(2).max(16).optional().nullable(),
+  currency: currencySchema.optional().nullable(),
+});
+
+export type UpdateCompanySettingsInput = z.infer<
+  typeof updateCompanySettingsSchema
+>;
+
+export const companyIdSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+});
+
+export type CompanyIdInput = z.infer<typeof companyIdSchema>;
+
 export const createPersonSchema = z.object({
   workspaceId: z.string().uuid(),
   companyId: z.string().uuid().nullable().optional(),

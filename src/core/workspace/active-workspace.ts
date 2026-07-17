@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import { CoreError } from "@/core/errors";
+import { clearActiveCompanyIdCookie } from "@/core/company/active-company";
 import { listMembershipsForUser } from "@/core/membership/memberships";
 import { getPersonByUserAndWorkspace } from "@/core/people/people";
 import type { Workspace } from "@/core/types";
@@ -151,5 +152,6 @@ export async function switchActiveWorkspace(
 
   const workspace = await getWorkspaceById(workspaceId);
   await setActiveWorkspaceIdCookie(workspace.id);
+  await clearActiveCompanyIdCookie();
   return workspace;
 }

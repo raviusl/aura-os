@@ -1,10 +1,12 @@
 export type {
   Company,
   CompanyStatus,
+  CompanyType,
   CoreInvitation,
   CoreInvitationStatus,
   CorePermission,
   CoreRole,
+  Membership,
   MembershipRole,
   MembershipStatus,
   Person,
@@ -13,6 +15,7 @@ export type {
   Project,
   ProjectStatus,
   ProjectType,
+  SessionContext,
   Workspace,
   WorkspaceContext,
   WorkspaceMember,
@@ -20,9 +23,25 @@ export type {
 } from "@/core/types";
 
 export {
+  ACTIVE_COMPANY_COOKIE,
+  listCompaniesForUserInWorkspace,
+  resolveActiveCompany,
+  switchActiveCompany,
+} from "@/core/company/active-company";
+
+export {
+  createCompany,
+  getCompanyById,
+  getCompanyBySlug,
+  listCompaniesByWorkspace,
+  updateCompanySettings,
+} from "@/core/company/company";
+
+export {
   CORE_PERMISSIONS,
   CORE_ROLES,
   COMPANY_STATUSES,
+  COMPANY_TYPES,
   MEMBERSHIP_ROLES,
   MEMBERSHIP_STATUSES,
   PERSON_STATUSES,

@@ -14,24 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { switchCompanyAction } from "@/core/actions/context-actions";
-import type { Company } from "@/core/types";
+import { useCompanyContext } from "@/features/company/components/company-context-provider";
 import { cn } from "@/lib/utils";
 
-type CompanySwitcherProps = {
-  workspaceId: string;
-  companies: Company[];
-  activeCompany: Company | null;
-};
-
-export function CompanySwitcher({
-  workspaceId,
-  companies,
-  activeCompany,
-}: CompanySwitcherProps) {
+export function CompanySwitcher() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { workspaceId, company, companies } = useCompanyContext();
 
-  if (companies.length === 0) {
+  if (!workspaceId || companies.length === 0) {
     return null;
   }
 
@@ -42,7 +33,7 @@ export function CompanySwitcher({
         disabled={pending}
       >
         <span className="truncate">
-          {activeCompany?.name ?? "Select company"}
+          {company?.name ?? "Select company"}
         </span>
         <ChevronsUpDownIcon className="size-3.5 shrink-0 opacity-50" />
       </DropdownMenuTrigger>
@@ -53,11 +44,11 @@ export function CompanySwitcher({
         <DropdownMenuLabel className="text-xs text-white/45">
           Companies
         </DropdownMenuLabel>
-        {companies.map((company) => {
-          const active = company.id === activeCompany?.id;
+        {companies.map((item) => {
+          const active = item.id === company?.id;
           return (
             <DropdownMenuItem
-              key={company.id}
+              key={item.id}
               disabled={pending || active}
               className={cn(
                 "cursor-pointer truncate text-sm",
@@ -68,27 +59,39 @@ export function CompanySwitcher({
                 startTransition(async () => {
                   const result = await switchCompanyAction({
                     workspaceId,
-                    companyId: company.id,
+                    companyId: item.id,
                   });
                   if (!result.ok) {
                     toast.error(result.error);
                     return;
                   }
-                  toast.success(`Switched to ${company.name}`);
+                  toast.success(`Switched to ${item.name}`);
                   router.refresh();
                 });
               }}
             >
-              {company.name}
+              {item.name}
             </DropdownMenuItem>
           );
         })}
         <DropdownMenuSeparator className="bg-white/10" />
         <DropdownMenuItem
           className="cursor-pointer text-sm"
-          onClick={() => router.push("/dashboard/select-company")}
+          onClick={() => router.push("/dashboard/companies/new")}
+        >
+          Create company
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer text-sm"
+          onClick={() => router.push("/dashboard/companies")}
         >
           Manage companies
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer text-sm"
+          onClick={() => router.push("/dashboard/settings/company")}
+        >
+          Company settings
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

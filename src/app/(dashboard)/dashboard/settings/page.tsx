@@ -21,6 +21,26 @@ export default async function SettingsPage() {
 
       <div className="space-y-3">
         <Link
+          href="/dashboard/settings/company"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Company</p>
+          <p className="mt-1 text-xs text-white/45">
+            Name, type, logo, timezone, country, currency, and status.
+          </p>
+        </Link>
+
+        <Link
+          href="/dashboard/companies"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Companies</p>
+          <p className="mt-1 text-xs text-white/45">
+            List, create, and switch between companies in the active workspace.
+          </p>
+        </Link>
+
+        <Link
           href="/dashboard/settings/workspace"
           className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
         >

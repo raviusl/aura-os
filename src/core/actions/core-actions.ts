@@ -7,13 +7,11 @@ import {
   invitePerson,
 } from "@/core/auth/invitation";
 import { requireSessionUserId } from "@/core/auth/session";
-import { createCompany } from "@/core/company/company";
 import { toCoreUserMessage } from "@/core/errors";
 import { assignRole, createPerson } from "@/core/people/people";
 import { createProject } from "@/core/project/project";
 import type {
   AcceptCoreInvitationInput,
-  CreateCompanyInput,
   CreatePersonInput,
   CreateProjectInput,
   InvitePersonInput,
@@ -23,23 +21,6 @@ import type { CoreRole } from "@/core/types";
 export type CoreActionResult<T = undefined> =
   | { ok: true; data: T }
   | { ok: false; error: string };
-
-export async function createCompanyAction(
-  input: CreateCompanyInput,
-): Promise<CoreActionResult<{ companyId: string }>> {
-  try {
-    const userId = await requireSessionUserId();
-    const { requirePersonPermission } = await import("@/core/people/people");
-    await requirePersonPermission(userId, input.workspaceId, "company.write");
-    const company = await createCompany(input);
-    return { ok: true, data: { companyId: company.id } };
-  } catch (error) {
-    return {
-      ok: false,
-      error: toCoreUserMessage(error, "Failed to create company"),
-    };
-  }
-}
 
 export async function createPersonAction(
   input: CreatePersonInput,

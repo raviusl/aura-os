@@ -9,7 +9,6 @@ import { switchActiveCompany } from "@/core/company/active-company";
 import { toCoreUserMessage } from "@/core/errors";
 import type { SwitchCompanyInput } from "@/core/schemas";
 import { switchActiveWorkspace } from "@/core/workspace/active-workspace";
-import { setActiveCompanyIdCookie } from "@/core/company/active-company";
 
 export type ContextActionResult<T = undefined> =
   | { ok: true; data: T }
@@ -83,7 +82,6 @@ export async function selectCompanyAndContinueAction(input: {
   try {
     const userId = await requireSessionUserId();
     await switchActiveCompany(userId, input.workspaceId, input.companyId);
-    await setActiveCompanyIdCookie(input.companyId);
     revalidateContextPaths();
     return { ok: true, data: undefined };
   } catch (error) {

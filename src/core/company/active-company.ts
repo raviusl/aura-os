@@ -3,7 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import { CoreError } from "@/core/errors";
-import { getCompanyById, listCompaniesByWorkspace } from "@/core/company/company";
+import { getCompanyById } from "@/core/company/company";
 import {
   getMembershipForUserInCompany,
   listMembershipsForUser,
@@ -50,16 +50,37 @@ export async function listCompaniesForUserInWorkspace(
   const companyIds = [
     ...new Set(
       memberships
-        .filter((row) => row.workspace_id === workspaceId)
+        .filter(
+          (row) =>
+            row.workspace_id === workspaceId && row.status !== "removed",
+        )
         .map((row) => row.company_id),
     ),
   ];
+
   if (companyIds.length === 0) {
-    return listCompaniesByWorkspace(workspaceId);
+    const admin = (await import("@/lib/supabase/admin")).createAdminClient();
+    const { data: people } = await admin
+      .from("people")
+      .select("company_id")
+      .eq("user_id", userId)
+      .eq("workspace_id", workspaceId)
+      .eq("status", "accepted")
+      .not("company_id", "is", null);
+
+    for (const row of people ?? []) {
+      if (row.company_id) {
+        companyIds.push(row.company_id);
+      }
+    }
+  }
+
+  if (companyIds.length === 0) {
+    return [];
   }
 
   const companies = await Promise.all(
-    companyIds.map((id) => getCompanyById(id, workspaceId)),
+    [...new Set(companyIds)].map((id) => getCompanyById(id, workspaceId)),
   );
   return companies.sort((a, b) => a.name.localeCompare(b.name));
 }
