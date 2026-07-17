@@ -8,6 +8,8 @@ import {
   MEMBERSHIP_ROLES,
   MEMBERSHIP_STATUSES,
   PROJECT_TYPES,
+  VENDOR_CATEGORIES,
+  VENDOR_STATUSES,
   WORKSPACE_STATUSES,
 } from "@/core/types";
 
@@ -211,6 +213,43 @@ export const clientIdSchema = z.object({
 });
 
 export type ClientIdInput = z.infer<typeof clientIdSchema>;
+
+export const createVendorSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  projectId: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(160),
+  email: z.string().email().optional().nullable(),
+  phone: z.string().max(40).optional().nullable(),
+  category: z.enum(VENDOR_CATEGORIES).nullable().optional(),
+  status: z.enum(VENDOR_STATUSES).optional(),
+  notes: z.string().max(4000).optional().nullable(),
+});
+
+export type CreateVendorInput = z.infer<typeof createVendorSchema>;
+
+export const updateVendorSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  vendorId: z.string().uuid(),
+  projectId: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(160),
+  email: z.string().email().optional().nullable(),
+  phone: z.string().max(40).optional().nullable(),
+  category: z.enum(VENDOR_CATEGORIES).nullable().optional(),
+  status: z.enum(VENDOR_STATUSES).optional(),
+  notes: z.string().max(4000).optional().nullable(),
+});
+
+export type UpdateVendorInput = z.infer<typeof updateVendorSchema>;
+
+export const vendorIdSchema = z.object({
+  workspaceId: z.string().uuid(),
+  companyId: z.string().uuid(),
+  vendorId: z.string().uuid(),
+});
+
+export type VendorIdInput = z.infer<typeof vendorIdSchema>;
 
 export const invitePersonSchema = z.object({
   workspaceId: z.string().uuid(),

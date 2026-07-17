@@ -60,6 +60,24 @@ export type ClientType = (typeof CLIENT_TYPES)[number];
 export const CLIENT_STATUSES = ["active", "follow_up", "archived"] as const;
 export type ClientStatus = (typeof CLIENT_STATUSES)[number];
 
+/** Sprint 016 vendor categories. */
+export const VENDOR_CATEGORIES = [
+  "photographer",
+  "videographer",
+  "decorator",
+  "makeup_artist",
+  "live_band",
+  "emcee",
+  "venue",
+  "catering",
+  "florist",
+  "others",
+] as const;
+export type VendorCategory = (typeof VENDOR_CATEGORIES)[number];
+
+export const VENDOR_STATUSES = ["active", "inactive", "archived"] as const;
+export type VendorStatus = (typeof VENDOR_STATUSES)[number];
+
 /** Sprint 012 workspace membership roles (Product Blueprint). */
 export const MEMBERSHIP_ROLES = [
   "founder",
@@ -101,6 +119,8 @@ export const CORE_PERMISSIONS = [
   "project.write",
   "client.read",
   "client.write",
+  "vendor.read",
+  "vendor.write",
   "permission.manage",
 ] as const;
 export type CorePermission = (typeof CORE_PERMISSIONS)[number];
@@ -209,6 +229,22 @@ export type Client = {
   client_type: ClientType | null;
   status: ClientStatus;
   follow_up_at: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** Vendor (Company + optional Project). */
+export type Vendor = {
+  id: string;
+  workspace_id: string;
+  company_id: string;
+  project_id: string | null;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  category: VendorCategory | null;
+  status: VendorStatus;
   notes: string | null;
   created_at: string;
   updated_at: string;

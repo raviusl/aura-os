@@ -19,6 +19,9 @@ export type {
   ProjectStatus,
   ProjectType,
   SessionContext,
+  Vendor,
+  VendorCategory,
+  VendorStatus,
   Workspace,
   WorkspaceContext,
   WorkspaceMember,
@@ -57,6 +60,14 @@ export {
 } from "@/core/project/project";
 
 export {
+  createVendor,
+  getVendorById,
+  listVendorsByCompany,
+  listVendorsByProject,
+  updateVendor,
+} from "@/core/vendor/vendor";
+
+export {
   CORE_PERMISSIONS,
   CORE_ROLES,
   CLIENT_STATUSES,
@@ -68,6 +79,8 @@ export {
   PERSON_STATUSES,
   PROJECT_STATUSES,
   PROJECT_TYPES,
+  VENDOR_CATEGORIES,
+  VENDOR_STATUSES,
   WORKSPACE_STATUSES,
 } from "@/core/types";
 

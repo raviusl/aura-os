@@ -1,6 +1,7 @@
 import { requireDashboardContext } from "@/core/auth/context";
 import { listClientsByCompany } from "@/core/client/client";
 import { listProjectsByCompany } from "@/core/project/project";
+import { listVendorsByCompany } from "@/core/vendor/vendor";
 import { getDashboardData } from "@/features/dashboard/api/get-dashboard-data";
 import { DashboardHeader } from "@/features/dashboard/components/dashboard-header";
 import { QuickActions } from "@/features/dashboard/components/quick-actions";
@@ -10,17 +11,20 @@ import { WeddingCard } from "@/features/dashboard/components/wedding-card";
 import { ContextBanner } from "@/features/context/components/context-banner";
 import { ClientsPanel } from "@/features/client/components/clients-panel";
 import { ProjectsPanel } from "@/features/project/components/projects-panel";
+import { VendorsPanel } from "@/features/vendor/components/vendors-panel";
 
 export default async function DashboardPage() {
   const context = await requireDashboardContext();
-  const [data, projects, clients] = await Promise.all([
+  const [data, projects, clients, vendors] = await Promise.all([
     getDashboardData(),
     listProjectsByCompany(context.workspace.id, context.company.id),
     listClientsByCompany(context.workspace.id, context.company.id),
+    listVendorsByCompany(context.workspace.id, context.company.id),
   ]);
 
   const canWriteProjects = context.permissions.has("project.write");
   const canWriteClients = context.permissions.has("client.write");
+  const canWriteVendors = context.permissions.has("vendor.write");
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
@@ -38,6 +42,12 @@ export default async function DashboardPage() {
           canWrite={canWriteClients}
         />
       </div>
+
+      <VendorsPanel
+        vendors={vendors}
+        companyName={context.company.name}
+        canWrite={canWriteVendors}
+      />
 
       <DashboardHeader
         displayName={data.displayName}

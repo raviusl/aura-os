@@ -691,6 +691,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      vendors: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          company_id: string;
+          project_id: string | null;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          category: string | null;
+          status: string;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          company_id: string;
+          project_id?: string | null;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          category?: string | null;
+          status?: string;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          workspace_id?: string;
+          company_id?: string;
+          project_id?: string | null;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          category?: string | null;
+          status?: string;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       core_invitations: {
         Row: {
           id: string;

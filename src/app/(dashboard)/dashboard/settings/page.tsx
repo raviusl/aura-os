@@ -21,6 +21,17 @@ export default async function SettingsPage() {
 
       <div className="space-y-3">
         <Link
+          href="/dashboard/vendors"
+          className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
+        >
+          <p className="text-sm font-medium text-white">Vendors</p>
+          <p className="mt-1 text-xs text-white/45">
+            Photographer, venue, catering, and other vendor categories for the
+            active company.
+          </p>
+        </Link>
+
+        <Link
           href="/dashboard/clients"
           className="block rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 transition-colors hover:bg-white/[0.05]"
         >
