@@ -11,6 +11,7 @@ Internal documentation for **RIVA** — the operating system for service busines
 | --- | --- |
 | [product/](./product/01_SOFTWARE_VISION.md) | **Product Bible** — vision, principles, IA, data, portals, automation, roadmap, rules |
 | [architecture/](./architecture/00_ARCHITECTURE_PHASE.md) | **Software Architecture** — navigation, hierarchy, permissions, modules, portals |
+| [technical-blueprint/](./technical-blueprint/00_OVERVIEW.md) | **CTO Technical Blueprint** — system, database, API, auth, permissions, storage, notifications, deployment, sprint plan, coding standards |
 
 ## Historical / Prototype V0 docs
 
@@ -38,9 +39,10 @@ Earlier Aura OS sprint docs remain for reference only. Where they conflict with 
 - **Product Bible** — approved under `/docs/product`
 - **Architecture Phase** — approved under `/docs/architecture`
 - **Sprint 008 Blueprint** — documentation approved under `/docs/sprint-008`
-- **Architecture Review** — pending (Blueprint not locked yet)
-- **Prototype V0** — archived (no feature development, no rebuild)
-- **Next** — wait for Architecture Review / Blueprint lock (do not start Sprint 009)
+- **CTO Technical Blueprint** — drafted under `/docs/technical-blueprint`
+- **Sprint 009 Core Foundation** — implemented (`docs/SPRINT009.md`) — awaiting CTO review
+- **Prototype V0** — archived UI remains; do not extend business modules
+- **Next** — CTO review of Sprint 009 (do not start Sprint 010)
 
 ## Related project docs
 

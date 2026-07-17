@@ -354,6 +354,286 @@ export type Database = {
         };
         Relationships: [];
       };
+      // Sprint 009 — Core Foundation
+      workspaces: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          status: string;
+          timezone: string;
+          locale: string;
+          currency: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          status?: string;
+          timezone?: string;
+          locale?: string;
+          currency?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          slug?: string;
+          status?: string;
+          timezone?: string;
+          locale?: string;
+          currency?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      companies: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          name: string;
+          slug: string;
+          status: string;
+          country: string | null;
+          timezone: string | null;
+          locale: string | null;
+          currency: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          name: string;
+          slug: string;
+          status?: string;
+          country?: string | null;
+          timezone?: string | null;
+          locale?: string | null;
+          currency?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          workspace_id?: string;
+          name?: string;
+          slug?: string;
+          status?: string;
+          country?: string | null;
+          timezone?: string | null;
+          locale?: string | null;
+          currency?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      roles: {
+        Row: {
+          key: string;
+          label: string;
+          description: string | null;
+          is_system: boolean;
+          created_at: string;
+        };
+        Insert: {
+          key: string;
+          label: string;
+          description?: string | null;
+          is_system?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          key?: string;
+          label?: string;
+          description?: string | null;
+          is_system?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      permissions: {
+        Row: {
+          key: string;
+          description: string;
+          created_at: string;
+        };
+        Insert: {
+          key: string;
+          description: string;
+          created_at?: string;
+        };
+        Update: {
+          key?: string;
+          description?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      role_permissions: {
+        Row: {
+          role_key: string;
+          permission_key: string;
+        };
+        Insert: {
+          role_key: string;
+          permission_key: string;
+        };
+        Update: {
+          role_key?: string;
+          permission_key?: string;
+        };
+        Relationships: [];
+      };
+      people: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          company_id: string | null;
+          user_id: string | null;
+          email: string;
+          full_name: string;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          company_id?: string | null;
+          user_id?: string | null;
+          email: string;
+          full_name: string;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          workspace_id?: string;
+          company_id?: string | null;
+          user_id?: string | null;
+          email?: string;
+          full_name?: string;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      person_roles: {
+        Row: {
+          id: string;
+          person_id: string;
+          role_key: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          person_id: string;
+          role_key: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          person_id?: string;
+          role_key?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      projects: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          company_id: string;
+          name: string;
+          project_type: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          company_id: string;
+          name: string;
+          project_type?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          workspace_id?: string;
+          company_id?: string;
+          name?: string;
+          project_type?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      core_invitations: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          company_id: string | null;
+          email: string;
+          full_name: string;
+          role_key: string;
+          token_hash: string;
+          status: string;
+          invited_by_user_id: string | null;
+          invited_person_id: string | null;
+          expires_at: string;
+          accepted_at: string | null;
+          accepted_user_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          company_id?: string | null;
+          email: string;
+          full_name: string;
+          role_key: string;
+          token_hash: string;
+          status?: string;
+          invited_by_user_id?: string | null;
+          invited_person_id?: string | null;
+          expires_at: string;
+          accepted_at?: string | null;
+          accepted_user_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          workspace_id?: string;
+          company_id?: string | null;
+          email?: string;
+          full_name?: string;
+          role_key?: string;
+          token_hash?: string;
+          status?: string;
+          invited_by_user_id?: string | null;
+          invited_person_id?: string | null;
+          expires_at?: string;
+          accepted_at?: string | null;
+          accepted_user_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
