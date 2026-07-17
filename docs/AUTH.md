@@ -1,6 +1,6 @@
 # Authentication — Invitation Only
 
-Aura OS is an **enterprise / invitation-only** product. There is **no public Sign Up**.
+RIVA OS is an **enterprise / invitation-only** product. There is **no public Sign Up**.
 
 ## Current login surface
 
@@ -63,7 +63,7 @@ Super Admin
 ```mermaid
 sequenceDiagram
   participant SA as Super Admin
-  participant App as Aura OS
+  participant App as RIVA OS
   participant Mail as Resend
   participant User as Invitee
 
@@ -101,7 +101,7 @@ sequenceDiagram
 NEXT_PUBLIC_APP_URL=https://your-production-domain.com
 SUPER_ADMIN_EMAILS=owner@yourcompany.com
 RESEND_API_KEY=re_xxx
-RESEND_FROM_EMAIL=Aura OS <onboarding@resend.dev>
+RESEND_FROM_EMAIL=RIVA OS <onboarding@resend.dev>
 SUPABASE_SERVICE_ROLE_KEY=...
 ```
 

@@ -2,11 +2,11 @@
 
 ## Goal
 
-Design the **complete product blueprint** for Aura OS before implementing UI.
+Design the **complete product blueprint** for RIVA OS before implementing UI.
 
 ## Objectives
 
-1. Describe Aura OS as an Event Operating System and catalog all main modules.
+1. Describe RIVA OS as an Event Operating System and catalog all main modules.
 2. Design top navigation, left sidebar, and navigation rules.
 3. Define nested sidebar structure for Workspace → Settings.
 4. Document page hierarchy and parent–child relationships.
@@ -36,7 +36,7 @@ Design the **complete product blueprint** for Aura OS before implementing UI.
 
 - All five blueprint documents exist with Mermaid where appropriate
 - Docs README lists the new files
-- Changes committed as: `docs: define Aura OS product blueprint`
+- Changes committed as: `docs: define RIVA OS product blueprint`
 
 ## Context
 

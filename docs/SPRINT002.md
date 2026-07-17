@@ -6,10 +6,10 @@ Build the **foundation architecture only**. No new business features.
 
 ## Objectives
 
-1. Establish a dedicated `/docs` documentation tree for Aura OS.
+1. Establish a dedicated `/docs` documentation tree for RIVA OS.
 2. Capture product roadmap (Phases 1–3).
 3. Document system architecture (Next.js + Supabase stack).
-4. Document the current database schema (all public Aura tables).
+4. Document the current database schema (all public RIVA tables).
 5. Define UI guidelines for future product work.
 6. Align the team on Sprint 002 scope: documentation and architecture foundations.
 
@@ -34,7 +34,7 @@ Build the **foundation architecture only**. No new business features.
 
 - `/docs` exists with the files listed above
 - Documentation reflects the current Sprint 001 schema and stack
-- Changes committed as: `docs: initialize Aura OS documentation`
+- Changes committed as: `docs: initialize RIVA OS documentation`
 
 ## Context from Sprint 001
 

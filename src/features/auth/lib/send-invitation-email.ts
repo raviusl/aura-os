@@ -23,7 +23,7 @@ export async function sendInvitationEmail(
 ): Promise<SendInvitationEmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from =
-    process.env.RESEND_FROM_EMAIL ?? "Aura OS <onboarding@resend.dev>";
+    process.env.RESEND_FROM_EMAIL ?? "RIVA OS <onboarding@resend.dev>";
 
   const subject = `You're invited to ${siteConfig.name}`;
   const expiresLabel = input.expiresAt.toUTCString();

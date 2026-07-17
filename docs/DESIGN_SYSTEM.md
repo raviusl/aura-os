@@ -1,8 +1,8 @@
-# Aura OS Design System
+# RIVA OS Design System
 
 Sprint 006 — **UI foundation**.
 
-This document defines the Aura OS design language and the reusable component library under `src/components/ui`.
+This document defines the RIVA OS design language and the reusable component library under `src/components/ui`.
 
 > Companion to [UI_GUIDELINES.md](./UI_GUIDELINES.md). Components use **shadcn/ui** (base-nova) + **Tailwind CSS** + CSS variables for light/dark mode.
 

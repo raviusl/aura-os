@@ -1,6 +1,6 @@
 # Database
 
-Current Aura OS schema as defined in Sprint 001 migrations.
+Current RIVA OS schema as defined in Sprint 001 migrations.
 
 Source of truth:
 
@@ -164,9 +164,9 @@ Revenue, expense, and payment records.
 | `set_updated_at()` | Trigger function; bumps `updated_at` on row update |
 | `handle_new_user()` | Security-definer trigger on `auth.users` insert → creates `profiles` row |
 
-## Legacy / non-Aura tables
+## Legacy / legacy pre-RIVA tables
 
-Some Supabase projects may still contain pre-Aura tables (for example `wedding_projects`). Those are **not** part of the Aura OS schema and are not documented here. Sprint 001 repair migrations intentionally do not drop them.
+Some Supabase projects may still contain pre-RIVA tables (for example `wedding_projects`). Those are **not** part of the RIVA OS schema and are not documented here. Sprint 001 repair migrations intentionally do not drop them.
 
 ## Sprint 002 note
 

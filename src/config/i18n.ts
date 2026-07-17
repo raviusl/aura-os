@@ -52,7 +52,7 @@ export type BilingualText = {
 };
 
 export const copy = {
-  appName: { zh: "Aura OS", en: "Aura OS" },
+  appName: { zh: "RIVA OS", en: "RIVA OS" },
   todayOverview: { zh: "今日概览", en: "Today Overview" },
   todaysMeetings: { zh: "今天会议", en: "Today's Meetings" },
   todaysWeddings: { zh: "今天婚礼", en: "Today's Weddings" },
@@ -69,8 +69,8 @@ export const copy = {
   priority: { zh: "优先级", en: "Priority" },
   dueTime: { zh: "截止时间", en: "Due Time" },
   owner: { zh: "负责人", en: "Owner" },
-  aiTitle: { zh: "Aura AI 助理", en: "Aura AI Assistant" },
-  aiInputLabel: { zh: "告诉 Aura…", en: "Tell Aura…" },
+  aiTitle: { zh: "RIVA AI 助理", en: "RIVA AI Assistant" },
+  aiInputLabel: { zh: "告诉 RIVA…", en: "Tell RIVA…" },
   aiPlaceholder: {
     zh: "例如：提醒我明天跟进 Jason / 建立 Wedding Timeline / 回复客户 / 生成报价单",
     en: "e.g. Remind me to follow up Jason tomorrow / Build wedding timeline / Reply to client / Generate quotation",
@@ -100,7 +100,7 @@ export const copy = {
   send: { zh: "发送", en: "Send" },
   cancel: { zh: "取消", en: "Cancel" },
   save: { zh: "保存", en: "Save" },
-  commandCenter: { zh: "指挥中心", en: "Command Center" },
+  commandCenter: { zh: "RIVA 指挥中心", en: "RIVA Command Center" },
 } as const;
 
 export function getGreeting(date = new Date()) {

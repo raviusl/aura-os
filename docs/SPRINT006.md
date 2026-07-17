@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build the **Aura OS Design System foundation** — reusable UI components only.
+Build the **RIVA OS Design System foundation** — reusable UI components only.
 
 ## Objectives
 
@@ -32,4 +32,4 @@ Build the **Aura OS Design System foundation** — reusable UI components only.
 
 - Required components present under `src/components/ui`
 - Design system documented
-- Commit: `feat: initialize Aura OS design system`
+- Commit: `feat: initialize RIVA OS design system`

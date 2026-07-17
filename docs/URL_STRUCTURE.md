@@ -2,7 +2,7 @@
 
 Sprint 005 — product architecture. Companion to [PAGE_HIERARCHY.md](./PAGE_HIERARCHY.md) and [NAVIGATION.md](./NAVIGATION.md).
 
-Defines **REST-friendly** URL naming for Aura OS operator routes and the Client / Guest **Viewer**.
+Defines **REST-friendly** URL naming for RIVA OS operator routes and the Client / Guest **Viewer**.
 
 > Documentation only. Does not change the current UI or routes.
 

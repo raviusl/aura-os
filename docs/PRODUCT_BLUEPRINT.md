@@ -1,8 +1,8 @@
-# Aura OS Product Blueprint
+# RIVA OS Product Blueprint
 
 Sprint 005 — **documentation and product architecture only**.
 
-This document defines Aura OS as an **Event Operating System**: one product surface for planning, coordinating, and delivering any occasion type (Wedding, Corporate, Birthday, Concert, Exhibition, Roadshow) inside a Workspace.
+This document defines RIVA OS as an **Event Operating System**: one product surface for planning, coordinating, and delivering any occasion type (Wedding, Corporate, Birthday, Concert, Exhibition, Roadshow) inside a Workspace.
 
 > **No code, schema, migrations, or UI changes in this sprint.** Target product design for future implementation. Aligns with [DATA_MODEL.md](./DATA_MODEL.md), [USER_JOURNEY.md](./USER_JOURNEY.md), and [ROADMAP.md](./ROADMAP.md).
 
@@ -10,7 +10,7 @@ This document defines Aura OS as an **Event Operating System**: one product surf
 
 ## 1. Product vision
 
-**Aura OS** is the operating system for event businesses.
+**RIVA OS** is the operating system for event businesses.
 
 | Principle | Meaning |
 | --- | --- |
@@ -22,7 +22,7 @@ This document defines Aura OS as an **Event Operating System**: one product surf
 
 ```mermaid
 flowchart TB
-  subgraph OS["Aura OS — Operator surface"]
+  subgraph OS["RIVA OS — Operator surface"]
     Dash[Dashboard]
     WS[Workspace]
     Ops[Clients · Events · Calendar · Tasks · Meetings]

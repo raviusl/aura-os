@@ -2,7 +2,7 @@
 
 ## Goal
 
-Design the **complete User Journey** for Aura OS across ten roles.
+Design the **complete User Journey** for RIVA OS across ten roles.
 
 ## Objectives
 

@@ -2,7 +2,7 @@
 
 ## Auth — invitation only (required)
 
-Aura OS does **not** allow public Sign Up.
+RIVA OS does **not** allow public Sign Up.
 
 1. Open **Supabase Dashboard → Authentication → Providers → Email**
 2. **Disable** public sign-ups (“Enable sign ups”)
@@ -55,7 +55,7 @@ See [docs/AUTH.md](../docs/AUTH.md).
 
 ## Sprint 001 — apply schema repair (required)
 
-Your project already has partial tables (`clients`, `tasks`, `wedding_projects`) with a different shape than Aura OS expects.
+Your project already has partial tables (`clients`, `tasks`, `wedding_projects`) with a different shape than RIVA OS expects.
 
 1. Open Supabase Dashboard → **SQL Editor**
 2. Run this file in full:

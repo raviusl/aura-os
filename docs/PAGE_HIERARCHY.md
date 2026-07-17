@@ -2,7 +2,7 @@
 
 Sprint 005 — product architecture. Companion to [PRODUCT_BLUEPRINT.md](./PRODUCT_BLUEPRINT.md) and [URL_STRUCTURE.md](./URL_STRUCTURE.md).
 
-Describes **every major page hierarchy** and **parent–child relationships** in Aura OS.
+Describes **every major page hierarchy** and **parent–child relationships** in RIVA OS.
 
 > Documentation only. Does not change the current UI.
 
@@ -49,7 +49,7 @@ Attachment
 ## 2. Global operator tree
 
 ```text
-Aura OS (authenticated)
+RIVA OS (authenticated)
 ├── Dashboard
 ├── Workspace
 │     ├── Overview
@@ -377,7 +377,7 @@ Avoid deeper than **5** URL segments under Event; use drawers for comments if ne
 Example:
 
 ```text
-Aura Studio › Events › Chen Wedding › Timeline › Confirm florist › floorplan.pdf
+RIVA Studio › Events › Chen Wedding › Timeline › Confirm florist › floorplan.pdf
 ```
 
 ---

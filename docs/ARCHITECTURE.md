@@ -1,6 +1,6 @@
 # Architecture
 
-High-level system architecture for Aura OS. This document describes the foundation stack only.
+High-level system architecture for RIVA OS. This document describes the foundation stack only.
 
 ## Overview
 

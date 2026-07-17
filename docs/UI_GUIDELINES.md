@@ -1,6 +1,6 @@
 # UI Guidelines
 
-Design principles for Aura OS. Product UI should feel like a premium operating system for planners — calm, fast, and intentional.
+Design principles for RIVA OS. Product UI should feel like a premium operating system for planners — calm, fast, and intentional.
 
 ## Principles
 

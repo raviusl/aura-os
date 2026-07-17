@@ -1,8 +1,8 @@
-# Aura OS Core Data Model
+# RIVA OS Core Data Model
 
 Sprint 003 — **architecture only**.
 
-This document defines the target conceptual data model for Aura OS. It does **not** change the live database, migrations, or UI.
+This document defines the target conceptual data model for RIVA OS. It does **not** change the live database, migrations, or UI.
 
 > **Relation to today:** Sprint 001 ships `profiles`, `clients`, `weddings`, `meetings`, `tasks`, and `financial_records` scoped to a single user. This model introduces **Workspace** as the tenancy root and generalizes **Wedding → Event** via templates. See [DATABASE.md](./DATABASE.md) for the current physical schema.
 
@@ -129,7 +129,7 @@ Money movements and obligations for the Workspace / Event / Client.
 
 ### Files
 
-Binary assets and documents in the Aura file system (backed by Supabase Storage later).
+Binary assets and documents in the RIVA file system (backed by Supabase Storage later).
 
 | Concept | Description |
 | --- | --- |
@@ -280,7 +280,7 @@ erDiagram
 
 ## 4. Event templates (future extensibility)
 
-Aura OS must support many occasion types **without** forking into separate systems.
+RIVA OS must support many occasion types **without** forking into separate systems.
 
 ### Principle
 

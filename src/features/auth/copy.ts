@@ -7,8 +7,8 @@ import type { BilingualText } from "@/config/i18n";
 export const authCopy = {
   signIn: { zh: "登录", en: "Sign In" },
   signInSubtitle: {
-    zh: "登录以进入 Aura OS 指挥中心",
-    en: "Sign in to open the Aura OS Command Center",
+    zh: "登录以进入 RIVA 指挥中心",
+    en: "Sign in to open the RIVA Command Center",
   },
   forgotPassword: { zh: "忘记密码", en: "Forgot Password" },
   forgotPasswordSubtitle: {
@@ -23,8 +23,8 @@ export const authCopy = {
   backToSignIn: { zh: "返回登录", en: "Back to Sign In" },
   updatePassword: { zh: "设置新密码", en: "Set New Password" },
   updatePasswordSubtitle: {
-    zh: "为您的 Aura OS 账户创建新密码",
-    en: "Create a new password for your Aura OS account",
+    zh: "为您的 RIVA OS 账户创建新密码",
+    en: "Create a new password for your RIVA OS account",
   },
   confirmPassword: { zh: "确认密码", en: "Confirm Password" },
   passwordUpdated: {

@@ -1,8 +1,8 @@
-# Aura OS User Journey
+# RIVA OS User Journey
 
 Sprint 004 — **documentation only**.
 
-This document defines the complete user journey for Aura OS across ten roles. It extends the conceptual model in [DATA_MODEL.md](./DATA_MODEL.md) with dashboards, workflows, permissions, notifications, and AI assistance patterns.
+This document defines the complete user journey for RIVA OS across ten roles. It extends the conceptual model in [DATA_MODEL.md](./DATA_MODEL.md) with dashboards, workflows, permissions, notifications, and AI assistance patterns.
 
 > **No code, schema, or UI changes in this sprint.** This is the target experience design for implementation in later phases.
 
@@ -10,7 +10,7 @@ This document defines the complete user journey for Aura OS across ten roles. It
 
 ## 1. Role taxonomy
 
-Aura OS separates **internal operators**, **functional specialists**, **external partners**, and **viewers**.
+RIVA OS separates **internal operators**, **functional specialists**, **external partners**, and **viewers**.
 
 ```mermaid
 flowchart TB
@@ -1016,7 +1016,7 @@ flowchart TB
 
 ```mermaid
 timeline
-  title Aura OS role maturity
+  title RIVA OS role maturity
   Phase 1 : Internal ops core
           : Client read-only portal basics
   Phase 2 : Coordinator day-of

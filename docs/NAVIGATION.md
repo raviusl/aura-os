@@ -2,7 +2,7 @@
 
 Sprint 005 — product architecture. Companion to [PRODUCT_BLUEPRINT.md](./PRODUCT_BLUEPRINT.md).
 
-Defines **top navigation**, **left sidebar**, and **navigation rules** for the Aura OS operator shell.
+Defines **top navigation**, **left sidebar**, and **navigation rules** for the RIVA OS operator shell.
 
 > Documentation only. Does not change the current UI.
 

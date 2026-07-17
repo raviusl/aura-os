@@ -1,6 +1,6 @@
 # Roadmap
 
-Aura OS product roadmap by phase. Phases are sequential; later phases build on earlier foundations.
+RIVA OS product roadmap by phase. Phases are sequential; later phases build on earlier foundations.
 
 ## Phase 1
 

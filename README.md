@@ -1,4 +1,4 @@
-# Aura OS
+# RIVA OS
 
 AI Operating System for Service Businesses.
 

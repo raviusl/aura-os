@@ -16,7 +16,7 @@ export function AppSidebar() {
     <aside className="flex h-svh w-[260px] shrink-0 flex-col border-r border-white/[0.06] bg-[#0a0a0b]/95 backdrop-blur-xl">
       <div className="flex h-14 items-center gap-2.5 px-5">
         <div className="flex size-7 items-center justify-center rounded-lg bg-white text-[11px] font-semibold tracking-tight text-black">
-          A
+          R
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold tracking-tight text-white">

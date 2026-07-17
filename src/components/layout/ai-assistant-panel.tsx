@@ -15,7 +15,7 @@ export function AiAssistantPanel() {
     event.preventDefault();
     const prompt = value.trim();
     if (!prompt) return;
-    // Prompt is collected for future Aura AI wire-up; no mock responses.
+    // Prompt is collected for future RIVA AI wire-up; no mock responses.
     setValue("");
   }
 
