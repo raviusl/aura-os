@@ -36,7 +36,8 @@ export function WorkspaceSwitcher({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="inline-flex h-9 max-w-[220px] items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 text-sm text-white outline-none hover:bg-white/[0.06] disabled:opacity-50"
+        aria-label="Select workspace"
+        className="inline-flex h-9 w-full max-w-[220px] items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 text-sm text-white outline-none hover:bg-white/[0.06] disabled:opacity-50"
         disabled={pending}
       >
         <span className="truncate">

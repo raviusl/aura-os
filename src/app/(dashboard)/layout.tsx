@@ -95,14 +95,26 @@ export default async function DashboardLayout({
                 <AppSidebar />
               </div>
               <div className="flex min-w-0 flex-1 flex-col">
-                <div className="flex h-14 items-center justify-between gap-2 border-b border-white/[0.06] px-3 sm:gap-3 sm:px-6">
-                  <div className="flex min-w-0 items-center gap-2">
+                <div className="flex min-h-[68px] items-center justify-between gap-2 border-b border-white/[0.06] px-3 sm:gap-3 sm:px-6">
+                  <div className="flex min-w-0 flex-1 items-center gap-2">
                     <MobileNav />
-                    <WorkspaceSwitcher
-                      workspaces={workspaces}
-                      activeWorkspace={activeWorkspace}
-                    />
-                    {activeWorkspace ? <CompanySwitcher /> : null}
+                    <div className="flex min-w-0 max-w-[220px] flex-1 flex-col gap-1 sm:flex-none">
+                      <span className="px-1 text-[10px] font-medium tracking-[0.08em] text-white/40">
+                        Workspace
+                      </span>
+                      <WorkspaceSwitcher
+                        workspaces={workspaces}
+                        activeWorkspace={activeWorkspace}
+                      />
+                    </div>
+                    {activeWorkspace ? (
+                      <div className="flex min-w-0 max-w-[200px] flex-1 flex-col gap-1 sm:flex-none">
+                        <span className="px-1 text-[10px] font-medium tracking-[0.08em] text-white/40">
+                          Company
+                        </span>
+                        <CompanySwitcher />
+                      </div>
+                    ) : null}
                   </div>
                   <SignOutButton />
                 </div>
