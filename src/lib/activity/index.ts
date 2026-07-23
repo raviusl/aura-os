@@ -1,23 +1,34 @@
-export type {
-  Activity,
-  ActivityId,
-  ActivityMetadata,
-} from "./activity";
+export {
+  ActivityAction,
+  ActivityActorType,
+  ActivityResult,
+  ActivityTargetType,
+  ActivityVisibility,
+  type Activity,
+  type ActivityActor,
+  type ActivityActorId,
+  type ActivityCategory,
+  type ActivityCategoryId,
+  type ActivityId,
+  type ActivityMetadata,
+  type ActivityTarget,
+} from "./ActivityFoundation";
 
 export {
   ACTIVITY_ACTOR_TYPES,
   ACTIVITY_TARGET_TYPES,
-  type ActivityActor,
-  type ActivityActorId,
-  type ActivityActorType,
-  type ActivityTarget,
-  type ActivityTargetType,
-} from "./actors";
+} from "./ActivityEnums";
 
+export type {
+  ActivityContext,
+  ActivityDraft,
+  ActivityMetadataOf,
+  ActivityScope,
+} from "./ActivityHelpers";
+
+// Project 017 compatibility: configurable activity type catalog.
 export {
   ACTIVITY_TYPE_CODES,
-  type ActivityCategory,
-  type ActivityCategoryId,
   type ActivityType,
   type ActivityTypeCode,
   type ActivityTypeId,

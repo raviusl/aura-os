@@ -3,16 +3,17 @@ export {
   type ActivityId,
   type ActivityMetadata,
 } from "./Activity";
+export { ActivityAction } from "./ActivityAction";
 export {
   ACTIVITY_ACTOR_TYPES,
   type ActivityActor,
   type ActivityActorId,
-  type ActivityActorType,
+  ActivityActorType,
 } from "./ActivityActor";
 export {
   ACTIVITY_TARGET_TYPES,
   type ActivityTarget,
-  type ActivityTargetType,
+  ActivityTargetType,
 } from "./ActivityTarget";
 export {
   ACTIVITY_TYPE_CODES,
@@ -24,6 +25,8 @@ export {
   type ActivityCategory,
   type ActivityCategoryId,
 } from "./ActivityCategory";
+export { ActivityResult } from "./ActivityResult";
+export { ActivityVisibility } from "./ActivityVisibility";
 export {
   type AuditLog,
   type AuditLogId,

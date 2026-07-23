@@ -1,28 +1,28 @@
-# Activity & Audit Foundation
+# Activity Foundation
 
-**Status:** Project 017 foundation documentation  
-**Scope:** Permanent Activity & Audit domain definitions only. No generation,
-persistence, filtering, search, rendering, notifications, API, UI, or business
-logic.
+**Status:** Project 018 foundation documentation
+**Scope:** Permanent Activity domain definitions and Project 017 Audit
+compatibility only. No generation, persistence, filtering, search, rendering,
+notifications, API, UI, or business logic.
 
 ---
 
 ## 1. Purpose
 
-Activity & Audit provide RIVA's universal history layer.
+Activity provides RIVA's universal operational history model. It powers future
+timeline history, notifications, AI summaries, audit correlation, and
+analytics without coupling source domains to a presentation or persistence
+engine.
 
-Activity records explain what happened across Workspace, Company, People,
-Client, Vendor, Project, Task, Timeline, Asset, Note, Comment, and future AI
-actions. Audit records preserve security- and compliance-oriented change
-history, including before/after values and outcomes.
-
-The two concepts share actors and target vocabulary but serve distinct needs:
+Activity and the existing Audit foundation share actor and target vocabulary
+but serve distinct needs:
 
 - **Activity** is human-readable operational history.
 - **Audit** is structured evidence of attempted and completed actions.
 
-Project 017 defines data structures only. Existing invitation audit behavior is
-not modified.
+Project 018 upgrades Activity to a self-contained model with embedded actor,
+target, action, category, result, and visibility values. Existing Audit and
+invitation audit behavior remains unchanged.
 
 ---
 
@@ -31,8 +31,8 @@ not modified.
 ### Activity
 
 A universal timeline event scoped to a Workspace and optionally a Company and
-Project. It references an actor, polymorphic target, activity type, category,
-human-readable title/description, extensible metadata, and creation timestamp.
+Project. It embeds an actor, polymorphic target, action, category, result,
+visibility boundary, extensible metadata, and creation timestamp.
 
 ### ActivityActor
 
@@ -42,8 +42,9 @@ types are:
 - `person`
 - `system`
 - `ai`
+- `automation`
 
-System and AI actors do not require a Person reference.
+System, AI, and Automation actors do not require a Person reference.
 
 ### ActivityTarget
 
@@ -51,27 +52,37 @@ Identifies a polymorphic domain target. Supported target types include:
 
 - Workspace
 - Company
-- Person
+- Project
 - Client
 - Vendor
-- Project
 - Task
 - Timeline
-- Asset
-- Note
-- Comment
-- AI Action
+- Meeting
+- Document
+- File
+- Invoice
+- User
 
-### ActivityType
+### ActivityAction
 
-Classifies events using stable codes for future Created, Updated, Deleted,
+Classifies events using enum values for Created, Updated, Deleted,
 Restored, Assigned, Unassigned, Uploaded, Downloaded, Commented, Mentioned,
 Completed, Cancelled, Archived, Logged In, and Logged Out activities.
 
 ### ActivityCategory
 
-Provides an extensible grouping for Activity Types. Project 017 defines no
+Provides an extensible grouping for Activities. Project 018 defines no
 category catalog or seed data.
+
+### ActivityResult
+
+Records whether an Activity is `success`, `failed`, `denied`, `cancelled`, or
+`pending`.
+
+### ActivityVisibility
+
+Defines the future audience boundary as `private`, `internal`, `workspace`,
+`company`, or `public`. Project 018 does not enforce visibility.
 
 ### AuditLog
 
@@ -99,21 +110,23 @@ Classifies an Audit outcome as:
 ```text
 Actor
   ↓
-Action (ActivityType)
+Action (ActivityAction)
   ↓
 Target (ActivityTarget)
   ↓
 Activity Timeline
 ```
 
-1. `ActivityActor` identifies a Person, system, or AI actor.
-2. `ActivityType` describes what happened.
+1. `ActivityActor` identifies a Person, system, AI, or Automation actor.
+2. `ActivityAction` describes what happened.
 3. `ActivityTarget` identifies the affected domain entity.
-4. `Activity` records the display-oriented event and its scope.
-5. Future timeline views may consume these records without changing source
+4. `ActivityResult` records the outcome.
+5. `ActivityVisibility` records the future audience boundary.
+6. `Activity` records the event and its scope.
+7. Future timeline views may consume these records without changing source
    domain models.
 
-Project 017 does not generate, filter, aggregate, or render Activities.
+Project 018 does not generate, filter, aggregate, or render Activities.
 
 ---
 
@@ -140,6 +153,28 @@ policies.
 
 ---
 
+## Relationships
+
+```text
+Workspace
+  └── Activity
+        ├── ActivityActor
+        ├── ActivityTarget
+        ├── ActivityAction
+        ├── ActivityCategory
+        ├── ActivityResult
+        └── ActivityVisibility
+```
+
+- Every Activity belongs to one Workspace.
+- Company and Project scope are optional.
+- Actor and Target are embedded references, not loaded domain aggregates.
+- Category remains an extensible reference model.
+- Result and Visibility are explicit enums.
+- Metadata is intentionally schema-neutral for future module-specific context.
+
+---
+
 ## Architecture
 
 ```text
@@ -147,14 +182,20 @@ src/types/activity/
 ├── Activity.ts
 ├── ActivityActor.ts
 ├── ActivityTarget.ts
-├── ActivityType.ts
+├── ActivityAction.ts
 ├── ActivityCategory.ts
+├── ActivityVisibility.ts
+├── ActivityResult.ts
+├── ActivityType.ts          # Project 017 compatibility
 ├── AuditLog.ts
 ├── AuditAction.ts
 ├── AuditResult.ts
 └── index.ts
 
 src/lib/activity/
+├── ActivityFoundation.ts
+├── ActivityEnums.ts
+├── ActivityHelpers.ts
 ├── activity.ts
 ├── actors.ts
 ├── catalog.ts
@@ -202,7 +243,7 @@ filtering, search, notification triggers, API/UI integration, and archival.
 
 ---
 
-## Explicit non-goals (Project 017)
+## Explicit non-goals (Project 018)
 
 - No CRUD, repositories, API, SQL, migrations, or services
 - No timeline rendering, filtering, or search

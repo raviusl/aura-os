@@ -1,19 +1,32 @@
-export const ACTIVITY_TARGET_TYPES = [
-  "workspace",
-  "company",
-  "person",
-  "client",
-  "vendor",
-  "project",
-  "task",
-  "timeline",
-  "asset",
-  "note",
-  "comment",
-  "ai_action",
-] as const;
+export enum ActivityTargetType {
+  Workspace = "workspace",
+  Company = "company",
+  Project = "project",
+  Client = "client",
+  Vendor = "vendor",
+  Task = "task",
+  Timeline = "timeline",
+  Meeting = "meeting",
+  Document = "document",
+  File = "file",
+  Invoice = "invoice",
+  User = "user",
+}
 
-export type ActivityTargetType = (typeof ACTIVITY_TARGET_TYPES)[number];
+export const ACTIVITY_TARGET_TYPES: readonly ActivityTargetType[] = [
+  ActivityTargetType.Workspace,
+  ActivityTargetType.Company,
+  ActivityTargetType.Project,
+  ActivityTargetType.Client,
+  ActivityTargetType.Vendor,
+  ActivityTargetType.Task,
+  ActivityTargetType.Timeline,
+  ActivityTargetType.Meeting,
+  ActivityTargetType.Document,
+  ActivityTargetType.File,
+  ActivityTargetType.Invoice,
+  ActivityTargetType.User,
+];
 
 /**
  * Polymorphic target of an Activity.
