@@ -31,12 +31,16 @@ type CreateVendorFormProps = {
   workspaceId: string;
   companyId: string;
   projects: Project[];
+  defaultProjectId?: string;
+  returnTo?: string;
 };
 
 export function CreateVendorForm({
   workspaceId,
   companyId,
   projects,
+  defaultProjectId = "",
+  returnTo = "/dashboard/vendors",
 }: CreateVendorFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -45,7 +49,7 @@ export function CreateVendorForm({
     defaultValues: {
       workspaceId,
       companyId,
-      projectId: "",
+      projectId: defaultProjectId,
       name: "",
       email: "",
       phone: "",
@@ -73,7 +77,7 @@ export function CreateVendorForm({
             return;
           }
           toast.success("Vendor created");
-          router.push("/dashboard/vendors");
+          router.push(returnTo);
           router.refresh();
         });
       })}

@@ -30,12 +30,16 @@ type CreateClientFormProps = {
   workspaceId: string;
   companyId: string;
   projects: Project[];
+  defaultProjectId?: string;
+  returnTo?: string;
 };
 
 export function CreateClientForm({
   workspaceId,
   companyId,
   projects,
+  defaultProjectId = "",
+  returnTo = "/dashboard/clients",
 }: CreateClientFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -44,7 +48,7 @@ export function CreateClientForm({
     defaultValues: {
       workspaceId,
       companyId,
-      projectId: "",
+      projectId: defaultProjectId,
       name: "",
       email: "",
       phone: "",
@@ -72,7 +76,7 @@ export function CreateClientForm({
             return;
           }
           toast.success("Client created");
-          router.push("/dashboard/clients");
+          router.push(returnTo);
           router.refresh();
         });
       })}

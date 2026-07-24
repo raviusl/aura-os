@@ -76,14 +76,10 @@ export function ProjectsPanel({
                   </p>
                 </div>
                 <Link
-                  href={
-                    canWrite
-                      ? `/dashboard/projects/${project.id}/edit`
-                      : "/dashboard/projects"
-                  }
+                  href={`/dashboard/projects/${project.id}`}
                   className="shrink-0 text-xs text-white/45 hover:text-white/70"
                 >
-                  {canWrite ? "Edit" : "View"}
+                  Open
                 </Link>
               </div>
             </li>

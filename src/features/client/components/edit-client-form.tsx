@@ -70,7 +70,11 @@ export function EditClientForm({ client, projects }: EditClientFormProps) {
             return;
           }
           toast.success("Client updated");
-          router.push("/dashboard/clients");
+          router.push(
+            values.projectId
+              ? `/dashboard/projects/${values.projectId}`
+              : "/dashboard/clients",
+          );
           router.refresh();
         });
       })}

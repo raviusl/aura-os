@@ -32,10 +32,10 @@ export default async function EditProjectPage({ params }: PageProps) {
     <div className="mx-auto w-full max-w-lg space-y-8">
       <div>
         <Link
-          href="/dashboard/projects"
+          href={`/dashboard/projects/${project.id}`}
           className="text-xs text-white/40 hover:text-white/70"
         >
-          ← Projects
+          ← {project.name}
         </Link>
         <h1 className="mt-3 text-xl text-white">Edit project</h1>
         <p className="mt-2 text-sm text-white/45">{project.name}</p>

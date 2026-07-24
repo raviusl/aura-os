@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ type VendorListItemProps = {
   companyId: string;
   vendor: Vendor;
   canWrite: boolean;
+  projectName?: string | null;
 };
 
 function statusLabel(status: Vendor["status"]) {
@@ -29,6 +31,7 @@ export function VendorListItem({
   companyId,
   vendor,
   canWrite,
+  projectName,
 }: VendorListItemProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -43,6 +46,14 @@ export function VendorListItem({
             {vendor.email ? ` · ${vendor.email}` : ""}
             {vendor.phone ? ` · ${vendor.phone}` : ""}
           </p>
+          {vendor.project_id && projectName ? (
+            <Link
+              href={`/dashboard/projects/${vendor.project_id}`}
+              className="mt-1 inline-block truncate text-xs text-white/40 hover:text-white/70"
+            >
+              Project · {projectName}
+            </Link>
+          ) : null}
         </div>
         {canWrite ? (
           <div className="flex flex-wrap gap-2">

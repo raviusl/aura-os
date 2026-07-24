@@ -2,16 +2,20 @@ import Link from "next/link";
 
 import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 import { requireDashboardContext } from "@/core/auth/context";
+import { listProjectsByCompany } from "@/core/project/project";
 import { listVendorsByCompany } from "@/core/vendor/vendor";
 import { VendorListItem } from "@/features/vendor/components/vendor-list-item";
 
 export default async function VendorsPage() {
   const context = await requireDashboardContext();
-  const vendors = await listVendorsByCompany(
-    context.workspace.id,
-    context.company.id,
-  );
+  const [vendors, projects] = await Promise.all([
+    listVendorsByCompany(context.workspace.id, context.company.id),
+    listProjectsByCompany(context.workspace.id, context.company.id),
+  ]);
   const canWrite = context.permissions.has("vendor.write");
+  const projectNames = new Map(
+    projects.map((project) => [project.id, project.name]),
+  );
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8">
@@ -49,6 +53,11 @@ export default async function VendorsPage() {
                 companyId={context.company.id}
                 vendor={vendor}
                 canWrite={canWrite}
+                projectName={
+                  vendor.project_id
+                    ? projectNames.get(vendor.project_id) ?? null
+                    : null
+                }
               />
             </li>
           ))}

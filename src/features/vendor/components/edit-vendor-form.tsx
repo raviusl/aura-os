@@ -71,7 +71,11 @@ export function EditVendorForm({ vendor, projects }: EditVendorFormProps) {
             return;
           }
           toast.success("Vendor updated");
-          router.push("/dashboard/vendors");
+          router.push(
+            values.projectId
+              ? `/dashboard/projects/${values.projectId}`
+              : "/dashboard/vendors",
+          );
           router.refresh();
         });
       })}

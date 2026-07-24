@@ -3,15 +3,19 @@ import Link from "next/link";
 import { ModuleEmptyState } from "@/components/layout/module-empty-state";
 import { requireDashboardContext } from "@/core/auth/context";
 import { listClientsByCompany } from "@/core/client/client";
+import { listProjectsByCompany } from "@/core/project/project";
 import { ClientListItem } from "@/features/client/components/client-list-item";
 
 export default async function ClientsPage() {
   const context = await requireDashboardContext();
-  const clients = await listClientsByCompany(
-    context.workspace.id,
-    context.company.id,
-  );
+  const [clients, projects] = await Promise.all([
+    listClientsByCompany(context.workspace.id, context.company.id),
+    listProjectsByCompany(context.workspace.id, context.company.id),
+  ]);
   const canWrite = context.permissions.has("client.write");
+  const projectNames = new Map(
+    projects.map((project) => [project.id, project.name]),
+  );
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8">
@@ -49,6 +53,11 @@ export default async function ClientsPage() {
                 companyId={context.company.id}
                 client={client}
                 canWrite={canWrite}
+                projectName={
+                  client.project_id
+                    ? projectNames.get(client.project_id) ?? null
+                    : null
+                }
               />
             </li>
           ))}
